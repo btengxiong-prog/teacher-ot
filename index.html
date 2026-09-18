@@ -728,24 +728,25 @@ tr:hover td{
 <div class="content">
 
 <!-- DASHBOARD -->
+<!-- DASHBOARD -->
 <section class="view active" id="view-dashboard">
     <div class="cards">
-<div class="card stat-card">
-            <div class="stat-head" style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div class="card stat-card">
+            <div class="stat-head">
                 <div>
                     <div class="stat-label">ຄູທັງໝົດ</div>
                     <div class="stat-number" id="statTeachers">0</div>
                 </div>
-                <div class="stat-icon" style="background:#e6fffb; color: #0f766e; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 24px;">👨‍🏫</div>
+                <div class="stat-icon">👨‍🏫</div>
             </div>
         </div>
         <div class="card stat-card">
-            <div class="stat-head" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div class="stat-head">
                 <div>
                     <div class="stat-label">ຊົ່ວໂມງສອນລວມ</div>
                     <div class="stat-number" id="statSchedules">0</div>
                 </div>
-                <div class="stat-icon" style="background:#e6fffb; color: #0f766e; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 24px;">⏱️</div>
+                <div class="stat-icon">⏱️</div>
             </div>
         </div>
         
@@ -4196,50 +4197,6 @@ function applyUserAccessControl() {
     // ຫຼັງຈາກຕັ້ງຄ່າກ່ອງເລືອກສຳເລັດ ໃຫ້ໂຫຼດຂໍ້ມູນໃນໜ້າຈໍໃໝ່
     renderAll();
 }
-// [ໂຄດໃໝ່ທີ່ຈະແທນທັບສ່ວນ Listener ດ້ານລຸ່ມສຸດ]
-document.addEventListener('DOMContentLoaded', () => {
-    db.ref('teacherSystem').on('value', (snapshot) => {
-        const data = snapshot.val();
-        
-        if (data) {
-            teachers = data.teachers || [];
-            assignments = data.assignments || {};
-            scheduleVersions = data.scheduleVersions || [];
-            activeVersionId = data.activeVersionId || 'default';
-            subjects = data.subjects || defaultSubjects;
-            schoolHierarchy = data.schoolHierarchy || defaultSchoolsData;
-            sysUsers = data.sysUsers || [];
-            loadActiveVersion();
-        } else {
-            // ຖ້າໃນ Firebase ຍັງບໍ່ມີຂໍ້ມູນ ໃຫ້ດຶງຂໍ້ມູນຈາກ LocalStorage (ທີ່ມີ 35 ຄົນ) ດັນຂຶ້ນ Firebase ໃຫ້ທີອັດຕະໂນມັດ!
-            teachers = JSON.parse(localStorage.getItem('teachers') || '[]');
-            assignments = JSON.parse(localStorage.getItem('assignments') || '{}');
-            scheduleVersions = JSON.parse(localStorage.getItem('scheduleVersions') || '[]');
-            activeVersionId = localStorage.getItem('activeVersionId') || 'default';
-            subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
-            schoolHierarchy = JSON.parse(localStorage.getItem('schoolHierarchy') || '{}');
-            sysUsers = JSON.parse(localStorage.getItem('sysUsers') || '[]');
-            
-            if (scheduleVersions.length === 0) {
-                let oldSchedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-                scheduleVersions.push({
-                    id: 'default',
-                    name: 'ຕາຕະລາງຕົ້ນສະບັບ',
-                    data: oldSchedules,
-                    createdAt: new Date().toISOString()
-                });
-            }
-            
-            saveData(); // ບັນທຶກຂໍ້ມູນທັງໝົດຂຶ້ນ Firebase ທັນທີ
-        }
-
-        if (!isAppReady) {
-            isAppReady = true;
-            initDistrictDropdown();
-        }
-        renderAll();
-    });
-});
 </script>
 </body>
 </html>
