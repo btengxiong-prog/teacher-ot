@@ -1644,15 +1644,23 @@ if (scheduleVersions.length === 0) {
     localStorage.setItem('activeVersionId', 'default');
 }
 
-// ຟັງຊັນໂຫຼດຂໍ້ມູນເວີຊັ່ນປັດຈຸບັນ
+// ຟັງຊັນໂຫຼດຂໍ້ມູນເວີຊັ່ນປັດຈຸບັນ (ແກ້ໄຂປ້ອງກັນ Error ຈາກ Firebase ທີ່ຕັດຄ່າວ່າງຖິ້ມ)
 function loadActiveVersion() {
+    if (!scheduleVersions || scheduleVersions.length === 0) {
+        let oldSchedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+        scheduleVersions = [{ id: 'default', name: 'ຕາຕະລາງຕົ້ນສະບັບ', data: oldSchedules, createdAt: new Date().toISOString() }];
+        activeVersionId = 'default';
+    }
+    
     let version = scheduleVersions.find(v => v.id === activeVersionId);
     if (!version) {
         version = scheduleVersions[0];
         activeVersionId = version.id;
-        localStorage.setItem('activeVersionId', activeVersionId);
     }
-    schedules = [...version.data]; // ສຳເນົາຂໍ້ມູນມາໃຊ້ງານ
+    
+    // ໃຊ້ fallback ຖ້າ version.data ຖືກ Firebase ຕັດຖິ້ມ
+    schedules = version.data ? [...version.data] : []; 
+    localStorage.setItem('activeVersionId', activeVersionId);
 }
 loadActiveVersion(); // ເອີ້ນໃຊ້ທັນທີເມື່ອໂຫຼດລະບົບ
 
@@ -4248,16 +4256,16 @@ async function importDatabase(event) {
     };
     reader.readAsText(file);
 }
-/* ============================== FIREBASE REALTIME SYNC (ສະບັບແກ້ໄຂບັກ & ກວດສອບສະຖານະ) ============================== */
+/* ============================== FIREBASE REALTIME SYNC (ສະບັບແກ້ໄຂບັກສົມບູນ) ============================== */
 const firebaseConfig = {
-  apiKey: "AIzaSyDD2uLOkgTkb_o2nCiwA3htyvpF3nxHqOA",
-  authDomain: "teacherapp-92705.firebaseapp.com",
-  projectId: "teacherapp-92705",
-  databaseURL: "https://teacherapp-92705-default-rtdb.firebaseio.com",
-  storageBucket: "teacherapp-92705.firebasestorage.app",
-  messagingSenderId: "332710309758",
-  appId: "1:332710309758:web:a6cf2936d79e3cb5ce4d2f",
-  measurementId: "G-16ZKGZ0922"
+    apiKey: "AIzaSyDD2uLOkgTkb_o2nCiwA3htyvpF3nxHqOA",
+    authDomain: "teacherapp-92705.firebaseapp.com",
+    projectId: "teacherapp-92705",
+    databaseURL: "https://teacherapp-92705-default-rtdb.firebaseio.com",
+    storageBucket: "teacherapp-92705.firebasestorage.app",
+    messagingSenderId: "332710309758",
+    appId: "1:332710309758:web:a6cf2936d79e3cb5ce4d2f",
+    measurementId: "G-16ZKGZ0922"
 };
 
 if (!firebase.apps.length) {
@@ -4268,12 +4276,13 @@ const db = firebase.database();
 window.isFirebaseReceiving = false;
 window.firebaseSyncTimer = null;
 
-// ເພີ່ມຈຸດສັງເກດການເຊື່ອມຕໍ່ (ສະແດງຢູ່ໃກ້ໆຊື່ Super Admin)
+// ເພີ່ມຈຸດສັງເກດການເຊື່ອມຕໍ່ (ສະແດງຢູ່ໃກ້ໆຊື່ Super Admin ຢ່າງປອດໄພ)
 const connectionStatus = document.createElement('div');
 connectionStatus.style.cssText = "font-size: 11px; margin-right: 15px; font-weight: bold; padding: 4px 8px; border-radius: 10px;";
-document.querySelector('.user-box').prepend(connectionStatus);
+const userBox = document.querySelector('.user-box');
+if (userBox) userBox.prepend(connectionStatus);
 
-// ກວດສອບວ່າອິນເຕີເນັດເຊື່ອມກັບ Firebase ໄດ້ຫຼືບໍ່
+// ກວດສອບສະຖານະການເຊື່ອມຕໍ່
 db.ref('.info/connected').on('value', function(snap) {
     if (snap.val() === true) {
         connectionStatus.innerHTML = "🟢 ອອນລາຍ (Realtime)";
@@ -4286,7 +4295,6 @@ db.ref('.info/connected').on('value', function(snap) {
     }
 });
 
-// ຟັງຊັນຍູ້ຂໍ້ມູນຂຶ້ນ (ໃຊ້ JSON.parse ເພື່ອກັ່ນຕອງຄ່າ Undefined ຖິ້ມ ປ້ອງກັນ Firebase Error)
 function syncToFirebase() {
     if (!window.isFirebaseReceiving) {
         const payload = JSON.parse(JSON.stringify({
@@ -4299,17 +4307,14 @@ function syncToFirebase() {
             schoolHierarchy: schoolHierarchy || {}
         }));
 
-        db.ref('school_data').set(payload).catch(err => {
-            console.error("Firebase Error:", err);
-            alert("ເກີດຂໍ້ຜິດພາດໃນການອັບເດດອອນລາຍ: " + err.message + "\n(ກະລຸນາກວດເບິ່ງການຕັ້ງຄ່າ Rules ໃນ Firebase)");
-        });
+        db.ref('school_data').set(payload).catch(err => console.error("Firebase Sync Error:", err));
     }
 }
 
-// ດັກຈັບການບັນທຶກຈາກ LocalStorage
+// ດັກຈັບການບັນທຶກຈາກ LocalStorage (ແກ້ໄຂການອ້າງອີງ .call() ໃຫ້ຖືກຕ້ອງ)
 const originalSetItem = localStorage.setItem;
 localStorage.setItem = function(key, value) {
-    originalSetItem.apply(this, arguments);
+    originalSetItem.call(localStorage, key, value); 
     const watchKeys = ['teachers', 'subjects', 'assignments', 'scheduleVersions', 'activeVersionId', 'sysUsers', 'schoolHierarchy', 'schedules'];
     if (watchKeys.includes(key)) {
         clearTimeout(window.firebaseSyncTimer);
@@ -4317,13 +4322,11 @@ localStorage.setItem = function(key, value) {
     }
 };
 
-// ຮັບຂໍ້ມູນລົງມາຈາກ Firebase
 db.ref('school_data').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
         window.isFirebaseReceiving = true;
 
-        // ດຶງຄ່າມາໃສ່ຕົວປ່ຽນ (ໃຊ້ || [] ເພື່ອປ້ອງກັນກໍລະນີ Firebase ບໍ່ສົ່ງ Array ວ່າງເປົ່າມາ)
         teachers = data.teachers || [];
         subjects = data.subjects || [];
         assignments = data.assignments || {};
@@ -4345,10 +4348,9 @@ db.ref('school_data').on('value', (snapshot) => {
 
         setTimeout(() => { window.isFirebaseReceiving = false; }, 500);
     } else {
-        syncToFirebase(); // ຖ້າຖານຂໍ້ມູນຫວ່າງເປົ່າ ໃຫ້ດັນຂໍ້ມູນໃນເຄື່ອງຂຶ້ນໄປ
+        syncToFirebase();
     }
 });
-/* ============================== ສິ້ນສຸດໂຄດໃໝ່ ============================== */
 </script>
 </body>
 </html>
