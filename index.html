@@ -1588,7 +1588,8 @@ tr:hover td{
                 <div class="form-group full">
                     <label>ສິດການນຳໃຊ້ (Role) *</label>
                     <select id="userRole" onchange="toggleUserScope()">
-                        <option value="admin">ແອັດມິນ (Admin) - ເຫັນທຸກຂໍ້ມູນ</option>
+                        <option value="admin">ແອັດມິນ (Super Admin) - ເຫັນທຸກຂໍ້ມູນ</option>
+                        <option value="province">ຂັ້ນແຂວງ - ເຫັນສະເພາະແຂວງ</option>
                         <option value="district">ຂັ້ນເມືອງ - ເຫັນສະເພາະເມືອງ</option>
                         <option value="school" selected>ໂຮງຮຽນ - ເຫັນສະເພາະໂຮງຮຽນ</option>
                     </select>
@@ -4019,8 +4020,8 @@ function renderUsers() {
             <td><b>${escapeHtml(u.username)}</b></td>
             <td>${escapeHtml(u.password)}</td>
             <td>
-                <span class="badge badge-${u.role === 'admin' ? 'green' : (u.role === 'district' ? 'blue' : 'orange')}">
-                    ${u.role === 'admin' ? 'ແອັດມິນ (Admin)' : (u.role === 'district' ? 'ຂັ້ນເມືອງ' : 'ໂຮງຮຽນ')}
+                <span class="badge badge-${u.role === 'admin' ? 'green' : (u.role === 'province' ? 'orange' : (u.role === 'district' ? 'blue' : 'muted'))}">
+                    ${u.role === 'admin' ? 'Super Admin' : (u.role === 'province' ? 'ຂັ້ນແຂວງ' : (u.role === 'district' ? 'ຂັ້ນເມືອງ' : 'ໂຮງຮຽນ'))}
                 </span>
             </td>
             <td>${escapeHtml(u.scope || 'ທັງໝົດ')}</td>
@@ -4067,7 +4068,12 @@ function toggleUserScope() {
         group.style.display = 'flex';
         scopeSelect.innerHTML = '<option value="">-- ກະລຸນາເລືອກ --</option>';
 
-        if (role === 'district') {
+        if (role === 'province') {
+            label.textContent = 'ເລືອກແຂວງທີ່ຮັບຜິດຊອບ *';
+            Object.keys(districtData).forEach(prov => {
+                scopeSelect.innerHTML += `<option value="${prov}">${prov}</option>`;
+            });
+        } else if (role === 'district') {
             label.textContent = 'ເລືອກເມືອງທີ່ຮັບຜິດຊອບ *';
             Object.keys(schoolHierarchy).forEach(dist => {
                 scopeSelect.innerHTML += `<option value="${dist}">${dist}</option>`;
