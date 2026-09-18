@@ -4197,6 +4197,50 @@ function applyUserAccessControl() {
     // ຫຼັງຈາກຕັ້ງຄ່າກ່ອງເລືອກສຳເລັດ ໃຫ້ໂຫຼດຂໍ້ມູນໃນໜ້າຈໍໃໝ່
     renderAll();
 }
+// [ໂຄດໃໝ່ທີ່ຈະແທນທັບສ່ວນ Listener ດ້ານລຸ່ມສຸດ]
+document.addEventListener('DOMContentLoaded', () => {
+    db.ref('teacherSystem').on('value', (snapshot) => {
+        const data = snapshot.val();
+        
+        if (data) {
+            teachers = data.teachers || [];
+            assignments = data.assignments || {};
+            scheduleVersions = data.scheduleVersions || [];
+            activeVersionId = data.activeVersionId || 'default';
+            subjects = data.subjects || defaultSubjects;
+            schoolHierarchy = data.schoolHierarchy || defaultSchoolsData;
+            sysUsers = data.sysUsers || [];
+            loadActiveVersion();
+        } else {
+            // ຖ້າໃນ Firebase ຍັງບໍ່ມີຂໍ້ມູນ ໃຫ້ດຶງຂໍ້ມູນຈາກ LocalStorage (ທີ່ມີ 35 ຄົນ) ດັນຂຶ້ນ Firebase ໃຫ້ທີອັດຕະໂນມັດ!
+            teachers = JSON.parse(localStorage.getItem('teachers') || '[]');
+            assignments = JSON.parse(localStorage.getItem('assignments') || '{}');
+            scheduleVersions = JSON.parse(localStorage.getItem('scheduleVersions') || '[]');
+            activeVersionId = localStorage.getItem('activeVersionId') || 'default';
+            subjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+            schoolHierarchy = JSON.parse(localStorage.getItem('schoolHierarchy') || '{}');
+            sysUsers = JSON.parse(localStorage.getItem('sysUsers') || '[]');
+            
+            if (scheduleVersions.length === 0) {
+                let oldSchedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+                scheduleVersions.push({
+                    id: 'default',
+                    name: 'ຕາຕະລາງຕົ້ນສະບັບ',
+                    data: oldSchedules,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            saveData(); // ບັນທຶກຂໍ້ມູນທັງໝົດຂຶ້ນ Firebase ທັນທີ
+        }
+
+        if (!isAppReady) {
+            isAppReady = true;
+            initDistrictDropdown();
+        }
+        renderAll();
+    });
+});
 </script>
 </body>
 </html>
