@@ -1,0 +1,4202 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ລະບົບຈັດການເງິນຊົ່ວໂມງເກີນຄູ</title>
+
+<style>
+/* ຝັງໄຟລ໌ຟອນເຂົ້າໃນລະບົບ ໂດຍໃຊ້ຊື່ໄຟລ໌ທີ່ປອດໄພສຳລັບເຊີບເວີ */
+@font-face {
+    font-family: 'Phetsarath Web';
+    src: url('phetsarath-ot.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Phetsarath Web', 'Phetsarath OT', 'Times New Roman', serif !important;
+}
+
+:root{
+    --primary:#0f766e;
+    --primary2:#115e59;
+    --bg:#f4f7f9;
+    --card:#ffffff;
+    --text:#17212b;
+    --muted:#667085;
+    --border:#e5e7eb;
+    --green:#15803d;
+    --red:#dc2626;
+    --orange:#d97706;
+    --blue:#2563eb;
+    --shadow:0 8px 24px rgba(15,23,42,.07);
+}
+
+body{
+    font-family: 'Phetsarath OT', 'Times New Roman', serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+button,input,select{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:255px;
+    background:#0f172a;
+    color:white;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    overflow-y:auto;
+    z-index:20;
+}
+
+.logo{
+    padding:22px 20px;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.logo-title{
+    font-size:19px;
+    font-weight:800;
+}
+
+.logo-sub{
+    font-size:12px;
+    color:#94a3b8;
+    margin-top:4px;
+}
+
+.menu{
+    padding:15px 10px;
+}
+
+.menu-label{
+    font-size:11px;
+    color:#64748b;
+    padding:12px 12px 7px;
+    font-weight:700;
+}
+
+.menu button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#cbd5e1;
+    text-align:left;
+    padding:11px 13px;
+    border-radius:9px;
+    margin-bottom:3px;
+    font-size:14px;
+    transition:.2s;
+}
+
+.menu button:hover{
+    background:#1e293b;
+    color:white;
+}
+
+.menu button.active{
+    background:var(--primary);
+    color:white;
+    font-weight:700;
+}
+
+.menu-icon{
+    display:inline-block;
+    width:28px;
+}
+
+/* MAIN */
+.main{
+    margin-left:255px;
+    width:calc(100% - 255px);
+    min-height:100vh;
+}
+
+.topbar{
+    height:70px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.page-title{
+    font-size:20px;
+    font-weight:800;
+}
+
+.user-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--primary);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+}
+
+.user-name{
+    font-size:13px;
+    font-weight:700;
+}
+
+.user-role{
+    font-size:11px;
+    color:var(--muted);
+}
+
+.content{
+    padding:28px;
+}
+
+.view{
+    display:none;
+}
+
+.view.active{
+    display:block;
+}
+
+/* [ໂຄດໃໝ່ທີ່ຈະແທນທັບ] */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:18px;
+    margin-bottom:22px;
+}
+@media(max-width:1200px){
+    .cards{ grid-template-columns:repeat(3,1fr); }
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+}
+
+.stat-card{
+    padding:20px;
+}
+
+.stat-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-icon{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#e6fffb;
+    font-size:21px;
+}
+
+.stat-number{
+    font-size:27px;
+    font-weight:800;
+    margin-top:12px;
+}
+
+.stat-label{
+    font-size:13px;
+    color:var(--muted);
+}
+
+.grid2{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:20px;
+}
+
+.panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:20px;
+}
+
+.panel-title{
+    font-size:16px;
+    font-weight:800;
+    margin-bottom:16px;
+}
+
+.quick-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.quick-btn{
+    padding:17px;
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:10px;
+    text-align:left;
+    font-size:13px;
+}
+
+.quick-btn:hover{
+    border-color:var(--primary);
+    background:#f0fdfa;
+}
+
+/* TOOLBAR */
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+}
+
+.toolbar-left,.toolbar-right{
+    display:flex;
+    gap:9px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:0;
+    border-radius:8px;
+    padding:10px 15px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.btn-primary{ background:var(--primary); color:white; }
+.btn-primary:hover{ background:var(--primary2); }
+.btn-light{ background:white; border:1px solid var(--border); color:var(--text); }
+.btn-danger{ background:#fee2e2; color:#b91c1c; }
+.btn-success{ background:#dcfce7; color:#166534; }
+.btn-blue{ background:#dbeafe; color:#1d4ed8; }
+
+input,select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+    background:white;
+    font-size:13px;
+}
+
+input:focus,select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(15,118,110,.1);
+}
+
+.search{
+    width:260px;
+}
+
+/* TABLE */
+.table-wrap{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:auto;
+    box-shadow:var(--shadow);
+    /* ຈຳກັດຄວາມສູງເພື່ອຢຶດ Toolbar (ດ້ານເທິງ) ແລະ Scrollbar ນອນ (ດ້ານລຸ່ມ) ໃຫ້ຄົງທີ່ */
+    max-height: calc(100vh - 200px); 
+}
+
+/* ຢຶດຫົວຕາຕະລາງ (Header) ບໍ່ໃຫ້ເລື່ອນຂຶ້ນໄປນຳ */
+.table-wrap thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* ຮັບປະກັນວ່າສີພື້ນຫຼັງຫົວຕາຕະລາງຈະບໍ່ໂປ່ງໃສຕອນເລື່ອນ */
+.table-wrap thead th {
+    background-clip: padding-box;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
+}
+
+th{
+    background:#f8fafc;
+    font-size:12px;
+    color:#475569;
+    font-weight:800;
+    padding:13px 12px;
+    text-align:left;
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #eef2f5;
+    font-size:13px;
+}
+
+tr:hover td{
+    background:#fafafa;
+}
+
+/* EXCEL-LIKE REPORT TABLE */
+.report-table {
+    width: 100% !important;
+    table-layout: auto !important;
+}
+.report-table th, .report-table td {
+    border: 1px solid #475569; /* ປ່ຽນສີເສັ້ນໃຫ້ເຂັ້ມຂຶ້ນ */
+    text-align: center;
+    padding: 8px 6px; 
+    font-size: 13px; 
+    white-space: nowrap; 
+}
+.report-table th {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+.report-table tbody tr:hover td {
+    background: #f8fafc;
+}
+.slot-cell {
+    width: 1% !important; /* ບັງຄັບໃຫ້ຫົດເຂົ້າພໍດີກັບຂໍ້ຄວາມ */
+    min-width: 20px !important;
+    max-width: none !important;
+    font-weight: bold;
+    color: var(--primary);
+    white-space: nowrap !important; /* ປ້ອງກັນການຕັດແຖວ ເພາະເຮົາໝຸນຕົວໜັງສືແລ້ວ */
+    padding: 4px 2px !important; /* ຫຼຸດໄລຍະຫ່າງພາຍໃນ ເພື່ອໃຫ້ຫ້ອງແຄບລົງອີກ */
+}
+/* ຫົວໃຈຫຼັກຢູ່ບ່ອນນີ້: ໃຫ້ຫ້ອງຊື່ດູດເອົາພື້ນທີ່ວ່າງທັງໝົດ */
+.report-table .name-cell {
+    text-align: left !important;
+    white-space: normal !important; 
+    width: 100%; /* ຍູ້ໃຫ້ກິນພື້ນທີ່ເຫຼືອທັງໝົດ */
+    min-width: 180px;
+}
+/* ຄລາສເສີມສຳລັບຫົວຂໍ້ທີ່ຍາວໆໃຫ້ຕັດແຖວໄດ້ */
+.report-table th.wrap-text {
+    white-space: normal !important;
+}
+
+.badge{
+    display:inline-block;
+    padding:4px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+.badge-green{ background:#dcfce7; color:#166534; }
+.badge-orange{ background:#fef3c7; color:#92400e; }
+.badge-blue{ background:#dbeafe; color:#1d4ed8; }
+
+.money{
+    font-weight:800;
+    color:var(--primary);
+}
+.modal-bg{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.modal-bg.show{ display:flex; }
+
+.modal{
+    width:min(700px,100%);
+    max-height:90vh;
+    overflow:auto;
+    background:white;
+    border-radius:15px;
+    box-shadow:0 25px 70px rgba(0,0,0,.25);
+}
+
+.modal-head{
+    padding:18px 20px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-title{ font-weight:800; }
+
+.close{
+    border:0;
+    background:#f1f5f9;
+    width:34px;
+    height:34px;
+    border-radius:8px;
+    font-size:18px;
+}
+
+.modal-body{ padding:20px; }
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{ grid-column:1/-1; }
+.form-group.third{ grid-column:span 1; }
+
+.form-group label{
+    font-size:12px;
+    font-weight:700;
+    color:#475569;
+}
+
+.modal-footer{
+    padding:15px 20px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:9px;
+}
+
+/* RESPONSIVE */
+.mobile-menu{ display:none; }
+
+@media(max-width:1000px){
+    .cards{ grid-template-columns:repeat(2,1fr); }
+    .grid2{ grid-template-columns:1fr; }
+}
+
+@media(max-width:700px){
+    .sidebar{ transform:translateX(-100%); transition:.25s; }
+    .sidebar.open{ transform:translateX(0); }
+    .main{ margin-left:0; width:100%; }
+    .mobile-menu{
+        display:block; border:0; background:#f1f5f9; width:38px; height:38px;
+        border-radius:8px; font-size:20px; margin-right:10px;
+    }
+    .cards{ grid-template-columns:1fr; }
+    .form-grid{ grid-template-columns:1fr; }
+}
+
+/* CLASS ສຳລັບຊ່ອນໃນໜ້າຈໍ ແຕ່ສະແດງຕອນພິມ */
+.print-only { display: none; } 
+
+@media print{
+    body{ background:white; }
+    .sidebar,.topbar,.toolbar,.no-print{ display:none!important; }
+    .main{ margin:0; width:100%; }
+    .content{ padding:0; }
+    .view{ display:none!important; }
+    .view.active{ display:block!important; } /* ສະແດງສະເພາະໜ້າທີ່ກຳລັງເປີດຢູ່ */
+    .table-wrap { box-shadow: none; border: none; overflow: visible; max-height: none !important; }
+    
+    /* ປົດລັອກຫົວຕາຕະລາງ (Sticky) ຕອນພິມ ເພື່ອແກ້ບັນຫາຕົວໜັງສືຫາຍກາຍເປັນຫ້ອງວ່າງ */
+    .table-wrap thead, .table-wrap thead th { 
+        position: static !important; 
+    }
+    
+/* ເປີດການສະແດງຜົນສ່ວນຫົວເອກະສານ */
+    .print-only { display: block; font-family: 'Phetsarath OT', 'Times New Roman', serif; }
+    
+    /* ປັບຂະໜາດຟອນຕາຕະລາງລົງເລັກນ້ອຍເພື່ອໃຫ້ພໍດີໜ້າເຈ້ຍ A4 ແນວນອນ */
+    .report-table th, .report-table td { font-size: 11px; padding: 4px; }
+}
+/* ຈັດການຕາຕະລາງລາຍງານທຸກໜ້າໃຫ້ກວ້າງເຕັມ 100% ຂອງໜ້າຈໍ/ເຈ້ຍ */
+.report-table {
+    width: 100% !important;
+    table-layout: auto !important; 
+}
+
+/* ປົດລັອກການບັງຄັບຂະໜາດ ແຕ່ຍົກເວັ້ນໃຫ້ຄໍລຳທີ່ກຳນົດ width ໄວ້ແລ້ວຮັກສາຂະໜາດໄດ້ */
+.report-table th, 
+.report-table td {
+    /* ເອົາ width: auto !important ອອກ ເພື່ອໃຫ້ .slot-cell ບໍ່ຖືກບີບ */
+    white-space: nowrap; /* ເອົາ !important ອອກ ເພື່ອໃຫ້ .slot-cell ຕັດແຖວໄດ້ */
+}
+/* ບັງຄັບໃຫ້ຫ້ອງ "ຊື່" ແລະ "ລາຍເຊັນ" ປັບຂະໜາດພໍດີກັບຂໍ້ຄວາມອັດຕະໂນມັດ (Auto width) */
+.report-table .name-cell {
+    white-space: nowrap !important; /* ບໍ່ໃຫ້ຂໍ້ຄວາມຕັດແຖວ */
+    width: 1% !important; /* ບັງຄັບໃຫ້ຫົດເຂົ້າພໍດີກັບເນື້ອໃນ */
+    min-width: auto !important;
+}
+
+.report-table thead tr:first-child th:last-child,
+.report-table tbody tr td:last-child {
+    white-space: nowrap !important;
+    width: 1% !important; /* ບັງຄັບໃຫ້ຫົດເຂົ້າພໍດີກັບເນື້ອໃນ */
+    min-width: 80px !important; /* ຈົ່ງພື້ນທີ່ໄວ້ໃຫ້ເຊັນໜ້ອຍໜຶ່ງ */
+    max-width: none !important;
+}
+
+/* ຕັ້ງຄ່າສະເພາະຕອນສັ່ງພິມ (Print) */
+@media print {
+    @page {
+        size: auto; /* ເຕັມເຈ້ຍອັດຕະໂນມັດ ບໍ່ວ່າຈະພິມຕັ້ງ ຫຼື ນອນ */
+        margin: 10mm; 
+    }
+    .report-table th, 
+    .report-table td { 
+        font-size: 13px !important; 
+        padding: 8px 4px !important;
+        border: 1px solid #000000 !important; /* ບັງຄັບເສັ້ນໃຫ້ເປັນສີດຳເຂັ້ມ 100% ເພື່ອໃຫ້ພິມແຈ້ງ */
+    }
+}
+/* ເພີ່ມເອັບເຟັກໃຫ້ຫ້ອງຕາຕະລາງສາມາດຄລິກໄດ້ */
+.editable-cell:hover {
+    background-color: #fef3c7 !important;
+    outline: 2px dashed var(--orange);
+    transition: 0.1s;
+}
+@media print {
+    .editable-cell { outline: none !important; }
+}
+/* ບ່ອນເຊັນເອກະສານທີ່ສາມາດປັບແກ້ໄດ້ */
+.signature-section {
+    margin-top: 10px; /* ຫຼຸດໄລຍະຫ່າງດ້ານເທິງຈາກ 40px ເຫຼືອ 10px */
+    padding-top: 5px; /* ຫຼຸດໄລຍະຫ່າງດ້ານເທິງຈາກ 20px ເຫຼືອ 5px */
+    font-size: 14px;
+    text-align: center;
+    page-break-inside: avoid; /* ປ້ອງກັນບໍ່ໃຫ້ບ່ອນເຊັນຖືກຕັດຂາດໄປໜ້າໃໝ່ເຄິ່ງໜຶ່ງ */
+}
+.print-input {
+    border: none;
+    border-bottom: 1px dotted #94a3b8;
+    background: transparent;
+    text-align: center;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: bold;
+    width: 80%;
+    padding-bottom: 4px;
+    outline: none;
+    color: var(--primary2);
+}
+.print-input:focus {
+    border-bottom: 1px dashed var(--primary);
+}
+@media print {
+    .print-input {
+        border-bottom: 1px dotted #000;
+        color: #000;
+    }
+    .print-input::placeholder { color: transparent; } /* ເຊື່ອງຈຸດໆ ຖ້າບໍ່ໄດ້ພິມຫຍັງໃສ່ຕອນພິມ */
+}
+/* ເອັບເຟັກສຳລັບຫົວຂໍ້ຕຳແໜ່ງທີ່ສາມາດແກ້ໄຂໄດ້ */
+.editable-title {
+    outline: none;
+    border: 1px dashed transparent;
+    border-radius: 6px;
+    padding: 4px;
+    transition: 0.2s;
+    min-height: 1.5em;
+}
+.editable-title:hover, .editable-title:focus {
+    border-color: var(--primary);
+    background-color: #f0fdfa; /* ສີພື້ນຫຼັງອ່ອນໆຕອນເອົາເມົ້າໄປຊີ້ */
+}
+@media print {
+    /* ຕອນພິມ ໃຫ້ເຊື່ອງເສັ້ນຂອບ ແລະ ສີພື້ນຫຼັງ */
+    .editable-title {
+        border-color: transparent !important;
+        background-color: transparent !important;
+        padding: 0 !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+    <div class="logo">
+        <div class="logo-title">ລະບົບເງິນຊົ່ວໂມງເກີນ</div>
+        <div class="logo-sub">Teacher Overtime Management</div>
+    </div>
+    <div class="menu">
+        <div class="menu-label">ຫຼັກ</div>
+        <button class="active" onclick="showView('dashboard',this)">
+            <span class="menu-icon">📊</span> Dashboard
+        </button>
+
+        <div class="menu-label">ຈັດການຂໍ້ມູນ</div>
+        <button onclick="showView('subjects',this)">
+            <span class="menu-icon">📚</span> ຂໍ້ມູນວິຊາສອນ
+        </button>
+        <button onclick="showView('teachers',this)">
+            <span class="menu-icon">👨‍🏫</span> ຂໍ້ມູນຄູ
+        </button>
+        <button onclick="showView('schedules',this)">
+            <span class="menu-icon">🗓️</span> ຕາຕະລາງສອນ
+        </button>
+
+        <div class="menu-label">ລາຍງານ</div>
+        <button onclick="showView('all_schedules',this)">
+            <span class="menu-icon">🗓️</span> ຕາຕະລາງສອນລວມ
+        </button>
+        <button onclick="showView('reports',this)">
+            <span class="menu-icon">📋</span> ແບບຕາຕະລາງສອນ(ເກີນ)
+        </button>
+        <button onclick="showView('summary',this)">
+            <span class="menu-icon">📑</span> ສະຫຼຸບຕາມຊັ້ນຮຽນ
+        </button>
+        <button onclick="showView('finance',this)">
+            <span class="menu-icon">💰</span> ສະຫຼຸບເງິນຊົ່ວໂມງເກີນ
+        </button>
+
+        <div class="menu-label">ລະບົບ</div>
+        <button onclick="showView('settings',this)">
+            <span class="menu-icon">⚙️</span> ຕັ້ງຄ່າ
+        </button>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+<header class="topbar">
+    <div style="display:flex;align-items:center;">
+        <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+        <div class="page-title" id="pageTitle" style="white-space: nowrap;">Dashboard</div>
+        
+        <!-- ກ່ອງເລືອກເວີຊັ່ນຕາຕະລາງ (ປັບເປັນແຖວດຽວແລ້ວ) -->
+        <div style="margin-left: 20px; display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; white-space: nowrap;" class="no-print">
+            <select id="globalVersionSelect" onchange="changeVersion(this.value)" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--primary); color: var(--primary); font-weight: bold; background: #f0fdfa; max-width: 250px; font-size: 13px; outline: none; cursor: pointer; text-overflow: ellipsis;">
+            </select>
+            <button class="btn btn-primary" style="padding: 6px 10px; font-size: 12px; white-space: nowrap;" onclick="openSaveVersionModal()" title="ກ໋ອບປີ້ຕາຕະລາງປັດຈຸບັນສ້າງເປັນເວີຊັ່ນໃໝ່">💾 ສ້າງເວີຊັ່ນໃໝ່</button>
+        </div>
+    </div>
+    <div class="user-box">
+        <div>
+            <div class="user-name">Super Admin</div>
+            <div class="user-role">Administrator</div>
+        </div>
+        <div class="avatar">SA</div>
+    </div>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<!-- DASHBOARD -->
+<section class="view active" id="view-dashboard">
+    <div class="cards">
+        <div class="card stat-card">
+            <div class="stat-head">
+                <div>
+                    <div class="stat-label">ຄູທັງໝົດ</div>
+                    <div class="stat-number" id="statTeachers">0</div>
+                </div>
+                <div class="stat-icon">👨‍🏫</div>
+            </div>
+        </div>
+        <div class="card stat-card">
+            <div class="stat-head">
+                <div>
+                    <div class="stat-label">ຊົ່ວໂມງສອນລວມ</div>
+                    <div class="stat-number" id="statSchedules">0</div>
+                </div>
+                <div class="stat-icon">⏱️</div>
+            </div>
+        </div>
+        
+        <!-- ກ່ອງເລືອກແຂວງ (ກ່ອງທີ 3) -->
+        <div class="card stat-card" style="display: flex; flex-direction: column; justify-content: center; padding: 15px 20px;">
+            <div class="stat-label" style="margin-bottom: 8px;">📍 ເລືອກແຂວງ</div>
+            <select id="filterProvince" onchange="updateDistricts()" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background-color: #f8fafc;">
+                <option value="">-- ທຸກແຂວງ --</option>
+                <option value="ນະຄອນຫຼວງວຽງຈັນ">ນະຄອນຫຼວງວຽງຈັນ</option>
+                <option value="ຜົ້ງສາລີ">ຜົ້ງສາລີ</option>
+                <option value="ຫຼວງນ້ຳທາ">ຫຼວງນ້ຳທາ</option>
+                <option value="ອຸດົມໄຊ">ອຸດົມໄຊ</option>
+                <option value="ບໍ່ແກ້ວ">ບໍ່ແກ້ວ</option>
+                <option value="ຫຼວງພະບາງ">ຫຼວງພະບາງ</option>
+                <option value="ຫົວພັນ">ຫົວພັນ</option>
+                <option value="ໄຊຍະບູລີ">ໄຊຍະບູລີ</option>
+                <option value="ຊຽງຂວາງ">ຊຽງຂວາງ</option>
+                <option value="ວຽງຈັນ">ວຽງຈັນ</option>
+                <option value="ບໍລິຄຳໄຊ">ບໍລິຄຳໄຊ</option>
+                <option value="ຄຳມ່ວນ">ຄຳມ່ວນ</option>
+                <option value="ສະຫວັນນະເຂດ">ສະຫວັນນະເຂດ</option>
+                <option value="ສາລະວັນ">ສາລະວັນ</option>
+                <option value="ເຊກອງ">ເຊກອງ</option>
+                <option value="ຈຳປາສັກ">ຈຳປາສັກ</option>
+                <option value="ອັດຕະປື">ອັດຕະປື</option>
+                <option value="ໄຊສົມບູນ">ໄຊສົມບູນ</option>
+            </select>
+        </div>
+
+        <!-- [ໂຄດໃໝ່ທີ່ຈະແທນທັບ] -->
+        <!-- ກ່ອງເລືອກເມືອງ (ກ່ອງທີ 4) -->
+        <div class="card stat-card" style="display: flex; flex-direction: column; justify-content: center; padding: 15px 20px;">
+            <div class="stat-label" style="margin-bottom: 8px;">🏢 ເລືອກເມືອງ</div>
+            <select id="filterDistrict" onchange="updateDashboardSchools()" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background-color: #f8fafc;">
+                <option value="">-- ທຸກເມືອງ --</option>
+            </select>
+        </div>
+
+        <!-- ກ່ອງເລືອກໂຮງຮຽນ (ກ່ອງທີ 5) -->
+        <div class="card stat-card" style="display: flex; flex-direction: column; justify-content: center; padding: 15px 20px;">
+            <div class="stat-label" style="margin-bottom: 8px;">🏫 ເລືອກໂຮງຮຽນ</div>
+            <select id="filterSchool" onchange="renderAll()" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background-color: #f8fafc;">
+                <option value="">-- ທຸກໂຮງຮຽນ --</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="grid2">
+        <div class="panel">
+            <div class="panel-title">⚡ ການເຮັດວຽກດ່ວນ</div>
+            <div class="quick-grid">
+                <button class="quick-btn" onclick="openTeacherModal()">
+                    👨‍🏫 <b>ເພີ່ມຄູ</b><br>
+                    <small>ເພີ່ມຂໍ້ມູນຄູໃໝ່</small>
+                </button>
+                <button class="quick-btn" onclick="openScheduleModal()">
+                    🗓️ <b>ເພີ່ມຕາຕະລາງ</b><br>
+                    <small>ບັນທຶກຊົ່ວໂມງສອນ</small>
+                </button>
+                <button class="quick-btn" onclick="showViewById('reports')">
+                    📋 <b>ເບິ່ງລາຍງານ</b><br>
+                    <small>ສະຫຼຸບຊົ່ວໂມງເກີນ</small>
+                </button>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-title">🧮 ສູດຄຳນວນເບື້ອງຕົ້ນ</div>
+            <div style="background:#f8fafc;padding:16px;border-radius:10px;">
+                <div style="font-size:13px;color:#475569;">ຊົ່ວໂມງເກີນ/ອາທິດ =</div>
+                <div style="font-size:15px;font-weight:800;color:#0f766e;margin:10px 0;">
+                    ຊົ່ວໂມງສອນຕົວຈິງ - ຊົ່ວໂມງທີ່ກຳນົດ
+                </div>
+                <div style="font-size:12px;color:#64748b;">
+                    ຊົ່ວໂມງທີ່ກຳນົດແມ່ນຕັ້ງຄ່າຢູ່ໃນໂປຣໄຟລ໌ຂອງຄູແຕ່ລະຄົນ (ປົກກະຕິ 12-14 ຊ.ມ)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUBJECTS -->
+<section class="view" id="view-subjects">
+    <div class="toolbar">
+        <div>
+            <h2 style="font-size:18px;">📚 ຂໍ້ມູນວິຊາສອນ</h2>
+            <div style="font-size:12px;color:#64748b;">ຈັດການລາຍຊື່ວິຊາຮຽນ ເພື່ອສະແດງໃນຕອນເລືອກຕາຕະລາງ</div>
+        </div>
+        <div class="toolbar-right">
+            <select id="filterSubjectGrade" onchange="filterSubjectsByGrade(this.value)" style="width: 180px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background-color: #f8fafc; cursor: pointer;">
+                <option value="all">🌐 ສະແດງທັງໝົດ</option>
+                <option value="ມ.1">ຫຼັກສູດຂັ້ນ ມ.1</option>
+                <option value="ມ.2">ຫຼັກສູດຂັ້ນ ມ.2</option>
+                <option value="ມ.3">ຫຼັກສູດຂັ້ນ ມ.3</option>
+                <option value="ມ.4">ຫຼັກສູດຂັ້ນ ມ.4</option>
+                <option value="ມ.5">ຫຼັກສູດຂັ້ນ ມ.5</option>
+                <option value="ມ.6">ຫຼັກສູດຂັ້ນ ມ.6</option>
+                <option value="ມ.7">ຫຼັກສູດຂັ້ນ ມ.7</option>
+            </select>
+            <button class="btn btn-primary" onclick="openSubjectModal()">＋ ເພີ່ມວິຊາ</button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>ຊື່ວິຊາສອນ</th>
+                    <th style="width: 150px;">ຊື່ຫຍໍ້</th>
+                    <th style="width: 130px; text-align: center;">ຊົ່ວໂມງ/ອາທິດ</th>
+                    <th style="width: 130px; text-align: center;">ຈັດການ</th>
+                    <th style="width: 150px;">ໝາຍເຫດ</th>
+                </tr>
+            </thead>
+            <tbody id="subjectTable"></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- TEACHERS -->
+<section class="view" id="view-teachers">
+    <div class="toolbar">
+        <div>
+            <h2 style="font-size:18px;">👨‍🏫 ຂໍ້ມູນຄູ</h2>
+            <div style="font-size:12px;color:#64748b;">ຈັດການລາຍຊື່ຄູ ແລະ ເງິນເດືອນພື້ນຖານ</div>
+        </div>
+        <div class="toolbar-right">
+            <!-- ປຸ່ມລຶບທີ່ຈະສະແດງກໍຕໍ່ເມື່ອມີການຕິກ Checkbox -->
+            <button class="btn btn-danger" id="btnDeleteSelectedTeachers" onclick="deleteSelectedTeachers()" style="display: none;">🗑️ ລຶບຂໍ້ມູນ</button>
+            <input class="search" id="teacherSearch" oninput="renderTeachers()" placeholder="🔎 ຄົ້ນຫາຊື່ຄູ...">
+            <button class="btn btn-success" onclick="openExcelImportModal()">📋 ວາງຈາກ Excel</button>
+            <button class="btn btn-primary" onclick="openTeacherModal()">＋ ເພີ່ມຄູ</button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 40px; text-align: center;">
+                        <input type="checkbox" id="selectAllTeachers" onchange="toggleAllTeacherCheckboxes(this)">
+                    </th>
+                    <th>#</th>
+                    <th>ຊື່–ນາມສະກຸນ</th>
+                    <th>ໂຮງຮຽນ</th>
+                    <th>ຕຳແໜ່ງ/ຮັບຜິດຊອບ</th>
+                    <th style="text-align: center;">ຊັ້ນ</th>
+                    <th style="text-align: center;">ຂັ້ນ</th>
+                    <th style="text-align: center;">ດັດສະນີ</th>
+                    <th style="text-align: right;">ມູນຄ່າດັດສະນີ</th>
+                    <th style="text-align: right;">ເງິນເດືອນພື້ນຖານ</th>
+                    <th style="text-align: center;">ຊ.ມ ກຳນົດ</th>
+                    <th style="text-align: center;">ຈັດການ</th>
+                </tr>
+            </thead>
+            <tbody id="teacherTable"></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- SCHEDULES (ແບບໃໝ່ ແບບຮູບທີ 2) -->
+<section class="view" id="view-schedules">
+    <div class="toolbar">
+        <div>
+            <h2 style="font-size:18px;">🗓️ ມອບໝາຍຕາຕະລາງສອນ</h2>
+            <div style="font-size:12px;color:#64748b;">ກຳນົດຄູສອນ ແລະ ຈຳນວນຫ້ອງໃຫ້ແຕ່ລະວິຊາ (ຄຳນວນຊົ່ວໂມງລວມອັດຕະໂນມັດ)</div>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn btn-success" onclick="generateDetailedSchedules()">⚡ ບັນທຶກ ແລະ ສ້າງຕາຕະລາງລາຍວັນອັດຕະໂນມັດ</button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">ລ/ດ</th>
+                    <th style="text-align: left;">ຊື່ວິຊາສອນ</th>
+                    <th style="width: 100px;">ຊົ່ວໂມງ/<br>ອາທິດ</th>
+                    <!-- ຄໍລຳສີແດງທີ່ປ້ອນໄດ້ -->
+                    <th style="width: 250px; background: #fff5f5; border-top: 3px solid #dc2626;">ຊື່ ແລະ ນາມສະກຸນ (ຄູສອນ)</th>
+                    <th style="width: 80px; background: #fff5f5; border-top: 3px solid #dc2626;">ຈ/ນ<br>ຫ້ອງ</th>
+                    <!-- ຈົບຄໍລຳສີແດງ -->
+                    <th style="width: 80px;">ລວມ ຊ.ມ<br>ສອນ</th>
+                </tr>
+            </thead>
+            <tbody id="scheduleTable"></tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ALL SCHEDULES REPORT (ຕາຕະລາງສອນລວມ) -->
+<section class="view" id="view-all_schedules">
+    <div class="toolbar no-print">
+        <div>
+            <h2 style="font-size:18px;">🗓️ ຕາຕະລາງສອນລວມ</h2>
+            <div style="font-size:12px;color:#64748b;">ຕາຕະລາງສອນຂອງຄູທຸກຄົນ, ທຸກຂັ້ນ ແລະ ທຸກຫ້ອງຮຽນ</div>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn btn-light" onclick="window.print()">🖨️ ພິມເອກະສານ</button>
+        </div>
+    </div>
+
+    <!-- ສ່ວນຫົວເອກະສານສຳລັບການພິມ -->
+    <div class="print-only">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-weight: 800; font-size: 16px;">ສາທາລະນະລັດ ປະຊາທິປະໄຕ ປະຊາຊົນລາວ</div>
+            <div style="font-size: 14px;">ສັນຕິພາບ ເອກະລາດ ປະຊາທິປະໄຕ ເອກະພາບ ວັດທະນະຖາວອນ</div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
+            <div style="text-align: left;">
+                ຫ້ອງການສຶກສາທິການ ແລະ ກິລາ <span id="printAllDist1" style="font-weight: bold;">...........................................</span><br>
+                ໂຮງຮຽນ <span id="printAllSchool" style="font-weight: bold;">.......................................................................</span>
+            </div>
+            <div style="text-align: right;">
+                ເລກທີ................/..................<br>
+                ເມືອງ <span id="printAllDist2" style="font-weight: bold;">......................</span>, ວັນທີ........./........./.............
+            </div>
+        </div>
+
+        <div style="text-align: center; font-weight: 800; font-size: 16px; margin: 25px 0 15px 0;">
+            ຕາຕະລາງສອນລວມຂອງຄູ-ອາຈານ ສົກຮຽນ ..............................
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 40px;">ລ/ດ</th>
+                    <th rowspan="2" class="name-cell">ຊື່ ແລະ ນາມສະກຸນ</th>
+                    <th colspan="7">ວັນຈັນ</th>
+                    <th colspan="7">ວັນອັງຄານ</th>
+                    <th colspan="7">ວັນພຸດ</th>
+                    <th colspan="7">ວັນພະຫັດ</th>
+                    <th colspan="7">ວັນສຸກ</th>
+                    <th rowspan="2" style="width: 80px;">ໝາຍເຫດ</th>
+                </tr>
+                <tr>
+                    <!-- Mon -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Tue -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Wed -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Thu -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Fri -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                </tr>
+            </thead>
+            <tbody id="allSchedulesTable">
+                <!-- Data inserted via JS -->
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- REPORTS (Excel Like) -->
+<section class="view" id="view-reports">
+    <div class="toolbar no-print">
+        <div>
+            <h2 style="font-size:18px;">📋 ລາຍງານສະຫຼຸບຊົ່ວໂມງເກີນ</h2>
+            <div style="font-size:12px;color:#64748b;">ສະຫຼຸບຂໍ້ມູນການສອນຕົວຈິງທຽບກັບຊົ່ວໂມງກຳນົດ</div>
+        </div>
+        <div class="toolbar-right">
+            <input type="month" id="reportMonth" class="search" onchange="renderExcelReport()" style="width:150px;">
+            <button class="btn btn-light" onclick="window.print()">🖨️ ພິມເອກະສານ</button>
+        </div>
+    </div>
+
+    <!-- ສ່ວນຫົວເອກະສານສຳລັບການພິມ (Print Header) -->
+    <div class="print-only">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <!-- ຖ້າມີຮູບກາໝາຍຊາດ ສາມາດໃຊ້ <img> ໃສ່ບ່ອນນີ້ໄດ້ -->
+            <div style="font-weight: 800; font-size: 16px;">ສາທາລະນະລັດ ປະຊາທິປະໄຕ ປະຊາຊົນລາວ</div>
+            <div style="font-size: 14px;">ສັນຕິພາບ ເອກະລາດ ປະຊາທິປະໄຕ ເອກະພາບ ວັດທະນະຖາວອນ</div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
+            <div style="text-align: left;">
+                ຫ້ອງການສຶກສາທິການ ແລະ ກິລາ <span id="printDistrict1" style="font-weight: bold;">...........................................</span><br>
+                ໂຮງຮຽນ <span id="printSchool" style="font-weight: bold;">.......................................................................</span>
+            </div>
+            <div style="text-align: right;">
+                ເລກທີ................/..................<br>
+                ເມືອງ <span id="printDistrict2" style="font-weight: bold;">......................</span>, ວັນທີ........./........./.............
+            </div>
+        </div>
+
+        <div style="text-align: center; font-weight: 800; font-size: 16px; margin: 25px 0 15px 0;">
+            ຕາຕະລາງສັງລວມຊົ່ວໂມງສອນເກີນຂອງຄູ ປະຈຳ <span id="printMonth" style="color:var(--primary);">......</span>/<span id="printYear" style="color:var(--primary);">......</span> ສົກຮຽນ <span id="printSchoolYear1" style="color:var(--primary);">......</span>-<span id="printSchoolYear2" style="color:var(--primary);">......</span>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 40px;">ລ/ດ</th>
+                    <th rowspan="2" class="name-cell">ຊື່ ແລະ ນາມສະກຸນ</th>
+                    <th rowspan="2">ຕຳແໜ່ງ/ຮັບຜິດຊອບ</th>
+                    <th colspan="7">ວັນຈັນ</th>
+                    <th colspan="7">ວັນອັງຄານ</th>
+                    <th colspan="7">ວັນພຸດ</th>
+                    <th colspan="7">ວັນພະຫັດ</th>
+                    <th colspan="7">ວັນສຸກ</th>
+                    <th rowspan="2" style="width: 60px;">ລວມ/<br>ອາທິດ</th>
+                    <th rowspan="2" style="width: 60px;">ຊ.ມ ສອນ<br>ທີ່ກຳນົດ</th>
+                    <th rowspan="2" style="width: 60px;">ຊ.ມ ເກີນ/<br>ອາທິດ</th>
+                    <th rowspan="2" style="width: 60px;">ຊ.ມ ເກີນ/<br>ເດືອນ</th>
+                    <th rowspan="2" style="width: 60px;">ຊ.ມ ພັກ/<br>ເດືອນ</th>
+                    <th rowspan="2" style="width: 60px;">ລວມ<br>ຕົວຈິງ</th>
+                    <th rowspan="2" style="min-width: 100px;">ລາຍເຊັນ</th>
+                </tr>
+                <tr>
+                    <!-- Mon -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Tue -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Wed -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Thu -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                    <!-- Fri -->
+                    <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                </tr>
+            </thead>
+<tbody id="reportTableExcel">
+                <!-- Data inserted via JS -->
+            </tbody>
+        </table>
+        
+        <!-- ພາກສ່ວນລາຍເຊັນສຳລັບລາຍງານສະຫຼຸບຊົ່ວໂມງເກີນ -->
+        <div class="signature-section" style="display: flex; justify-content: space-around; padding: 0 20px; margin-top: 30px; margin-bottom: 20px;">
+            <div style="width: 35%; text-align: center;">
+                <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 60px;">ຜູ້ອຳນວຍການໂຮງຮຽນ</div>
+                <input type="text" class="print-input" placeholder=".........................................." style="width: 100%; text-align: center;">
+            </div>
+            <div style="width: 35%; text-align: center;">
+                <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 60px;">ວິຊາການ/ຜູ້ສັງລວມ</div>
+                <input type="text" class="print-input" placeholder=".........................................." style="width: 100%; text-align: center;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUMMARY REPORT (NEW) -->
+<section class="view" id="view-summary">
+    <div class="toolbar no-print">
+        <div>
+            <h2 style="font-size:18px;">📑 ລາຍງານສະຫຼຸບຕາມຊັ້ນຮຽນ</h2>
+            <div style="font-size:12px;color:#64748b;">ສະຫຼຸບຊົ່ວໂມງສອນ ແຍກຕາມຊັ້ນຮຽນ ແລະ ວິຊາສອນ</div>
+        </div>
+        <div class="toolbar-right">
+            <input type="month" id="summaryMonth" class="search" onchange="renderSummaryReport()" style="width:150px;">
+            <button class="btn btn-light" onclick="window.print()">🖨️ ພິມເອກະສານ</button>
+        </div>
+    </div>
+
+    <!-- ສ່ວນຫົວເອກະສານສຳລັບການພິມ (Print Header ສຳລັບໜ້າສະຫຼຸບຕາມຊັ້ນຮຽນ) -->
+    <div class="print-only">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-weight: 800; font-size: 16px;">ສາທາລະນະລັດ ປະຊາທິປະໄຕ ປະຊາຊົນລາວ</div>
+            <div style="font-size: 14px;">ສັນຕິພາບ ເອກະລາດ ປະຊາທິປະໄຕ ເອກະພາບ ວັດທະນະຖາວອນ</div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
+            <div style="text-align: left;">
+                ຫ້ອງການສຶກສາທິການ ແລະ ກິລາ <span id="printSummaryDistrict1" style="font-weight: bold;">...........................................</span><br>
+                ໂຮງຮຽນ <span id="printSummarySchool" style="font-weight: bold;">.......................................................................</span>
+            </div>
+            <div style="text-align: right;">
+                ເລກທີ................/..................<br>
+                ເມືອງ <span id="printSummaryDistrict2" style="font-weight: bold;">......................</span>, ວັນທີ........./........./.............
+            </div>
+        </div>
+
+        <div style="text-align: center; font-weight: 800; font-size: 16px; margin: 25px 0 15px 0;">
+            ຕາຕະລາງສັງລວມຊົ່ວໂມງເກີນສະບັບສັງລວມ ຄູ-ອາຈານ ທີ່ມີຊົ່ວໂມງເກີນ<br>
+            ປະຈຳເດືອນ <span id="printSummaryMonth" style="color:var(--primary);">......</span>/<span id="printSummaryYear" style="color:var(--primary);">......</span> ສົກຮຽນ <span id="printSummarySchoolYear1" style="color:var(--primary);">......</span>-<span id="printSummarySchoolYear2" style="color:var(--primary);">......</span>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th rowspan="2">ລ/ດ</th>
+                    <th rowspan="2" class="name-cell">ຊື່ ແລະ ນາມສະກຸນ</th>
+                    <th rowspan="2">ຕຳແໜ່ງ/ຮັບຜິດຊອບ</th>
+                    <th rowspan="2">ຊັ້ນ<br>ສອນ</th>
+                    <th rowspan="2">ວິຊາສອນ</th>
+                    <th rowspan="2">ຊມ<br>ສອນ/<br>ອາທິດ</th>
+                    <th rowspan="2">ຈ/ນ<br>ຫ້ອງ</th>
+                    <th rowspan="2">ຊົ່ວໂມງ<br>ສອນຕົວຈິງ<br>/ອາທິດ</th>
+                    <th rowspan="2">ລວມ<br>ຊມ ສອນ/<br>ອາທິດ</th>
+                    <th rowspan="2">ຊມ<br>ສອນທີ່<br>ກຳນົດ</th>
+                    <th rowspan="2">ຊມ<br>ສອນເກີນ/<br>ອາທິດ</th>
+                    <th rowspan="2">ຊົ່ວໂມງ<br>ເກີນ/<br>ເດືອນ</th>
+                    <th rowspan="2">ວັນພັກ<br>ຕ່າງໆ<br>(ຊມ)</th>
+                    <th rowspan="2">ຊົ່ວໂມງ<br>ເກີນຕົວຈິງ/<br>ເດືອນ</th>
+                    <th rowspan="2">ລາຍເຊັນຄູ<br>ສອນ</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableExcel">
+                <!-- Data inserted via JS -->
+            </tbody>
+        </table>
+        
+            <!-- ພາກສ່ວນລາຍເຊັນທີ່ສາມາດພິມປັບແກ້ຊື່ ແລະ ຕຳແໜ່ງ ໄດ້ (ສຳລັບໜ້າສະຫຼຸບຕາມຊັ້ນຮຽນ) -->
+            <div class="signature-section" style="display: flex; justify-content: space-between; padding: 0 10px; margin-top: 15px;">
+            <div style="width: 24%;">
+                <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າຫ້ອງການສຶກສາທິການ<br>ແລະ ກິລາເມືອງ</div>
+                <input type="text" class="print-input" placeholder="..........................................">
+            </div>
+            <div style="width: 28%;">
+                <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າໜ່ວຍງານ ການສຶກສາກ່ອນໄວຮຽນ<br>ສາມັນສຶກສາ ແລະ ວິທະຍາສາດ</div>
+                <input type="text" class="print-input" placeholder="..........................................">
+            </div>
+            <div style="width: 24%;">
+                <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຜູ້ອຳນວຍການ</div>
+                <input type="text" class="print-input" placeholder="..........................................">
+            </div>
+            <div style="width: 24%;">
+                <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຜູ້ສັງລວມ</div>
+                <input type="text" class="print-input" placeholder="..........................................">
+            </div>
+        </div>
+    </div> <!-- ຍ້າຍ </div> ມາປິດຢູ່ບ່ອນນີ້ແທນ -->
+</section>
+<!-- FINANCE REPORT (NEW) -->
+<section class="view" id="view-finance">
+    <div class="toolbar no-print">
+        <div>
+            <h2 style="font-size:18px;">💰 ລາຍງານສະຫຼຸບເງິນຊົ່ວໂມງເກີນ</h2>
+            <div style="font-size:12px;color:#64748b;">ສະຫຼຸບການຄິດໄລ່ເງິນຄ່າສອນລ່ວງເວລາ ແລະ ຫັກອາກອນ</div>
+        </div>
+    <div class="toolbar-right">
+            <div style="display: flex; align-items: center; gap: 5px;">
+                <span style="font-size: 13px; font-weight: bold;">ແຕ່ເດືອນ:</span>
+                <input type="month" id="financeMonthStart" class="search" onchange="renderFinanceReport()" style="width:140px;">
+                <span style="font-size: 13px; font-weight: bold;">ຫາ:</span>
+                <input type="month" id="financeMonthEnd" class="search" onchange="renderFinanceReport()" style="width:140px;">
+            </div>
+            <button class="btn btn-light" onclick="window.print()">🖨️ ພິມເອກະສານ</button>
+        </div>
+    </div>
+
+<!-- ສ່ວນຫົວເອກະສານສຳລັບການພິມ (Print Header ສຳລັບໜ້າສະຫຼຸບເງິນ) -->
+    <div class="print-only">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <div style="font-weight: 800; font-size: 16px;">ສາທາລະນະລັດ ປະຊາທິປະໄຕ ປະຊາຊົນລາວ</div>
+            <div style="font-size: 14px;">ສັນຕິພາບ ເອກະລາດ ປະຊາທິປະໄຕ ເອກະພາບ ວັດທະນະຖາວອນ</div>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; font-size: 13px; line-height: 1.8; margin-bottom: 20px;">
+            <div style="text-align: left;">
+                ຫ້ອງການສຶກສາທິການ ແລະ ກິລາ <span id="printFinanceDistrict1" style="font-weight: bold;">...........................................</span><br>
+                ໂຮງຮຽນ <span id="printFinanceSchool" style="font-weight: bold;">.......................................................................</span>
+            </div>
+            <div style="text-align: right;">
+                ເລກທີ................/..................<br>
+                ເມືອງ <span id="printFinanceDistrict2" style="font-weight: bold;">......................</span>, ວັນທີ........./........./.............
+            </div>
+        </div>
+
+        <div style="text-align: center; font-weight: 800; font-size: 16px; margin: 25px 0 15px 0;">
+            ແຜນຄິດໄລ່ ເງິນຊົ່ວໂມງເກີນ ປະຈຳເດືອນ <span id="printFinanceRange" style="color:var(--primary);">......</span> ສົກຮຽນ <span id="printFinanceSchoolYear1" style="color:var(--primary);">......</span>-<span id="printFinanceSchoolYear2" style="color:var(--primary);">......</span>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 40px;">ລ/ດ</th>
+                    <th rowspan="2" class="name-cell">ຊື່ ແລະ ນາມສະກຸນ<br>ຄູສອນ</th>
+                    <th rowspan="2" style="width: 50px;">ຊັ້ນ</th>
+                    <th rowspan="2" style="width: 50px;">ຂັ້ນ</th>
+                    <th rowspan="2" style="width: 60px;">ດັດສະນີ</th>
+                    <th rowspan="2">ເງິນເດືອນ<br>ພື້ນຖານ</th>
+                    <th colspan="2" class="wrap-text" style="min-width: 250px;">ເງິນເກີນເວລາ =<br>(ງດ ພື້ນຖານ x ຈ/ນ ຊມ ເກີນ x 300%)/154</th>
+                    <th rowspan="2">ຫັກ<br>ອາກອນ</th>
+                    <th rowspan="2">ລວມເງິນ<br>ທີ່ໄດ້ຮັບ<br>ຕົວຈິງ</th>
+                    <th rowspan="2" style="width: 120px;">ລາຍເຊັນ<br>ຄູສອນ</th>
+                </tr>
+                <tr>
+                    <th style="width: 80px;">ຊ/ມເກີນ</th>
+                    <th style="width: 100px;">ຈ/ນ ເງິນ</th>
+                </tr>
+            </thead>
+<tbody id="financeTableExcel">
+                <!-- Data inserted via JS -->
+            </tbody>
+        </table>
+        <!-- ເອົາ </div> ທີ່ເຄີຍປິດກ່ອງຕາຕະລາງອອກຈາກບ່ອນນີ້ -->
+
+<!-- ກ່ອງສຳລັບແຕ້ມລາຍເຊັນອັດຕະໂນມັດ -->
+        <div class="signature-section" id="financeSignatureContainer">
+            <!-- ລາຍເຊັນຈະຖືກສ້າງຂຶ້ນດ້ວຍ Javascript ຕາມເງື່ອນໄຂ (ໂຮງຮຽນ ຫຼື ເມືອງ) -->
+        </div>
+    </div> <!-- ຍ້າຍ </div> ມາປິດຢູ່ບ່ອນນີ້ແທນ ເພື່ອຫຸ້ມເອົາລາຍເຊັນໄວ້ນຳ -->
+</section>
+<!-- SETTINGS (User Management) -->
+<section class="view" id="view-settings">
+    <div class="toolbar">
+        <div>
+            <h2 style="font-size:18px;">⚙️ ຕັ້ງຄ່າຜູ້ໃຊ້ງານລະບົບ</h2>
+            <div style="font-size:12px;color:#64748b;">ກຳນົດສິດ, ຊື່ຜູ້ໃຊ້ ແລະ ລະຫັດຜ່ານສຳລັບແຕ່ລະໂຮງຮຽນ ຫຼື ເມືອງ</div>
+        </div>
+        <div class="toolbar-right">
+            <button class="btn btn-primary" onclick="openUserModal()">＋ ເພີ່ມຜູ້ໃຊ້ໃໝ່</button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>ຊື່ຜູ້ໃຊ້ (Username)</th>
+                    <th>ລະຫັດຜ່ານ (Password)</th>
+                    <th>ສິດການນຳໃຊ້ (Role)</th>
+                    <th>ຮັບຜິດຊອບ (ໂຮງຮຽນ/ເມືອງ)</th>
+                    <th style="width: 130px; text-align: center;">ຈັດການ</th>
+                </tr>
+            </thead>
+            <tbody id="userTable"></tbody>
+        </table>
+    </div>
+</section>
+
+</div>
+</main>
+</div>
+
+<!-- SUBJECT MODAL -->
+<div class="modal-bg" id="subjectModal">
+<div class="modal" style="width: 450px;">
+    <div class="modal-head">
+        <div class="modal-title" id="subjectModalTitle">ເພີ່ມວິຊາສອນ</div>
+        <button class="close" onclick="closeModal('subjectModal')">×</button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" id="editSubjectId">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label>ຫຼັກສູດຊັ້ນຮຽນ *</label>
+                <select id="subjectGrade">
+                    <option value="ມ.1">ຫຼັກສູດຂັ້ນ ມ.1</option>
+                    <option value="ມ.2">ຫຼັກສູດຂັ້ນ ມ.2</option>
+                    <option value="ມ.3">ຫຼັກສູດຂັ້ນ ມ.3</option>
+                    <option value="ມ.4">ຫຼັກສູດຂັ້ນ ມ.4</option>
+                    <option value="ມ.5">ຫຼັກສູດຂັ້ນ ມ.5</option>
+                    <option value="ມ.6">ຫຼັກສູດຂັ້ນ ມ.6</option>
+                    <option value="ມ.7">ຫຼັກສູດຂັ້ນ ມ.7</option>
+                </select>
+            </div>
+            <div class="form-group full">
+                <label>ຊື່ວິຊາສອນ *</label>
+                <input id="subjectName" placeholder="ເຊັ່ນ: ພາສາລາວ ແລະ ວັນນະຄະດີ">
+            </div>
+            <div class="form-group">
+                <label>ຊື່ຫຍໍ້ *</label>
+                <input id="subjectShortName" placeholder="ເຊັ່ນ: ພາສາລາວ">
+            </div>
+            <div class="form-group">
+                <label>ຊົ່ວໂມງ/ອາທິດ *</label>
+                <input type="number" id="subjectHours" min="1" value="4" placeholder="ເຊັ່ນ: 4">
+            </div>
+            <div class="form-group">
+                <label>ໝາຍເຫດ</label>
+                <input id="subjectNote" placeholder="ເພີ່ມເຕີມ (ຖ້າມີ)">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-light" onclick="closeModal('subjectModal')">ຍົກເລີກ</button>
+        <button class="btn btn-primary" onclick="saveSubject()">💾 ບັນທຶກ</button>
+    </div>
+</div>
+</div>
+
+<!-- TEACHER MODAL -->
+<div class="modal-bg" id="teacherModal">
+<div class="modal">
+    <div class="modal-head">
+        <div class="modal-title" id="teacherModalTitle">ເພີ່ມຂໍ້ມູນຄູ</div>
+        <button class="close" onclick="closeModal('teacherModal')">×</button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" id="editTeacherId">
+        <div class="form-grid">
+            <div class="form-group full">
+                <label>ຊື່–ນາມສະກຸນ *</label>
+                <input id="teacherName" placeholder="ຊື່ ແລະ ນາມສະກຸນ">
+            </div>
+            <div class="form-group">
+                <label>ຕຳແໜ່ງ/ຮັບຜິດຊອບ</label>
+                <select id="teacherPosition" onchange="autoFillRequiredHours()">
+                    <option value="">-- ເລືອກຕຳແໜ່ງ/ຮັບຜິດຊອບ --</option>
+                    <option value="ຜອ">ຜອ</option>
+                    <option value="ຮອງ ຜອ">ຮອງ ຜອ</option>
+                    <option value="ສຶກສານິເທດ">ສຶກສານິເທດ</option>
+                    <option value="4 ຊັ້ນ ຫຼື 3 ວິຊາ">4 ຊັ້ນ ຫຼື 3 ວິຊາ</option>
+                    <option value="ຄູ ມ.ຕົ້ນ">ຄູ ມ.ຕົ້ນ</option>
+                    <option value="ຄູ ມ.ປາຍ">ຄູ ມ.ປາຍ</option>
+                    <option value="ຄູ ມ.ຕົ້ນ-ປາຍ">ຄູ ມ.ຕົ້ນ-ປາຍ</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>ຊ.ມ ສອນທີ່ກຳນົດ (ຕໍ່ອາທິດ) *</label>
+                <input type="number" id="teacherRequired" min="0" placeholder="ເຊັ່ນ: 14" value="14">
+            </div>
+            <div class="form-group">
+                <label>ຊັ້ນ</label>
+                <select id="teacherLevel" onchange="calculateSalary('auto')">
+                    <option value="">-- ເລືອກຊັ້ນ --</option>
+                    <option value="1">ຊັ້ນ 1</option>
+                    <option value="2">ຊັ້ນ 2</option>
+                    <option value="3">ຊັ້ນ 3</option>
+                    <option value="4">ຊັ້ນ 4</option>
+                    <option value="5">ຊັ້ນ 5</option>
+                    <option value="6">ຊັ້ນ 6</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>ຂັ້ນ</label>
+                <input type="number" id="teacherStep" placeholder="ເຊັ່ນ: 8" oninput="calculateSalary('auto')" min="1" max="15">
+            </div>
+            <div class="form-group">
+                <label>ດັດສະນີ</label>
+                <input type="number" id="teacherIndex" placeholder="ເຊັ່ນ: 348" oninput="calculateSalary()">
+            </div>
+            <div class="form-group">
+                <label>ມູນຄ່າດັດສະນີ (ປ້ອນເອງ)</label>
+                <input type="text" id="teacherIndexValue" placeholder="ເຊັ່ນ: 9,500" value="9,500" oninput="formatCurrencyInput(this); calculateSalary()">
+            </div>
+            <div class="form-group full">
+                <label>ເງິນເດືອນພື້ນຖານ (ກີບ) = ດັດສະນີ x ມູນຄ່າດັດສະນີ</label>
+                <input type="text" id="teacherSalary" placeholder="3,306,000" value="0" readonly style="background-color: #f8fafc; font-weight: bold; color: var(--primary);">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-light" onclick="closeModal('teacherModal')">ຍົກເລີກ</button>
+        <button class="btn btn-primary" onclick="saveTeacher()">💾 ບັນທຶກ</button>
+    </div>
+</div>
+</div>
+<!-- EXCEL IMPORT MODAL -->
+<div class="modal-bg" id="excelImportModal">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title">ນຳເຂົ້າຂໍ້ມູນຄູຈາກ Excel (Copy & Paste)</div>
+            <button class="close" onclick="closeModal('excelImportModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div style="font-size: 13px; color: #64748b; margin-bottom: 12px; background: #f8fafc; padding: 12px; border-radius: 8px;">
+                <b>ວິທີການ:</b> ກ໋ອບປີ້ຂໍ້ມູນລາຍຊື່ຈາກຕາຕະລາງ Excel ແລ້ວມາຄລິກຂວາເລືອກ Paste (ຫຼືກົດ Ctrl+V) ລົງໃນຫ້ອງລຸ່ມນີ້.<br>
+                <b style="color: var(--primary);">* ລຳດັບຖັນໃນ Excel ຕ້ອງລຽງຕາມນີ້:</b><br>
+                1.ຊື່-ນາມສະກຸນ, 2.ຕຳແໜ່ງ, 3.ຊັ້ນ, 4.ຂັ້ນ, 5.ດັດສະນີ, 6.ມູນຄ່າດັດສະນີ, 7.ຊ.ມ ກຳນົດ<br>
+                <small><i>(ຖ້າຖັນໃດບໍ່ມີຂໍ້ມູນໃນ Excel ໃຫ້ປະຫວ່າງໄວ້ກໍໄດ້ ແຕ່ລຳດັບຖັນຕ້ອງຕົງກັນ)</i></small>
+            </div>
+            <textarea id="excelPasteArea" rows="10" style="width: 100%; padding: 10px; border: 1px dashed var(--primary); border-radius: 8px; font-family: inherit; font-size: 13px; outline: none; resize: vertical;" placeholder="ຄລິກໃສ່ບ່ອນນີ້ ແລ້ວກົດ Ctrl + V ເພື່ອວາງຂໍ້ມູນ..."></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-light" onclick="closeModal('excelImportModal')">ຍົກເລີກ</button>
+            <button class="btn btn-success" onclick="processExcelPaste()">📥 ບັນທຶກເຂົ້າລະບົບ</button>
+        </div>
+    </div>
+</div>
+<!-- SCHEDULE MODAL -->
+<div class="modal-bg" id="scheduleModal">
+    <div class="modal">
+        <div class="modal-head">
+            <div class="modal-title">ບັນທຶກຕາຕະລາງສອນ</div>
+            <button class="close" onclick="closeModal('scheduleModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="editScheduleId">
+            <div class="form-grid">
+                
+            <!-- ເພີ່ມຊ່ອງເລືອກໂຮງຮຽນ -->
+                <div class="form-group full">
+                    <label>ເລືອກໂຮງຮຽນ * <small style="font-weight:normal; color:#64748b;">(ອີງຕາມເມືອງທີ່ເລືອກໃນ Dashboard)</small></label>
+                    <select id="scheduleSchool" onchange="filterTeachersBySchool()">
+                        <option value="">-- ເລືອກໂຮງຮຽນ --</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label>ເລືອກຄູສອນ *</label>
+                    <select id="scheduleTeacher">
+                        <option value="">-- ກະລຸນາເລືອກໂຮງຮຽນກ່ອນ --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>ວິຊາສອນ (ຕາມຫຼັກສູດ)</label>
+                    <select id="scheduleSubject">
+                        <option value="">-- ເລືອກວິຊາສອນ --</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>ຫ້ອງສອນ</label>
+                    <input id="scheduleRoom" list="roomList" placeholder="ເຊັ່ນ: ມ.5/1">
+                    <datalist id="roomList"></datalist>
+                </div>
+
+                <!-- ປຸ່ມເພີ່ມວິຊາ ແລະ ຫ້ອງສອນ (ແກ້ໄຂໃຫ້ເຕັມແຖວ ແລະ ງາມຂຶ້ນ) -->
+                <div class="form-group full" style="margin-top: -5px; margin-bottom: 5px;">
+                    <button type="button" class="btn btn-light" style="width: 100%; font-size: 13px; color: var(--primary); border: 1px dashed var(--primary); padding: 10px;" onclick="addSubSchedule()">
+                        ＋ ເພີ່ມວິຊາ ແລະ ຫ້ອງສອນ
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label>ວັນສອນ *</label>
+                    <select id="scheduleDay">
+                        <option value="1">ວັນຈັນ</option>
+                        <option value="2">ວັນອັງຄານ</option>
+                        <option value="3">ວັນພຸດ</option>
+                        <option value="4">ວັນພະຫັດ</option>
+                        <option value="5">ວັນສຸກ</option>
+                    </select>
+                </div>
+                
+                <div class="form-group full">
+                    <label>ຊົ່ວໂມງທີ * (ສາມາດຕິກເລືອກໄດ້ຫຼາຍຊົ່ວໂມງ)</label>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 5px; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; background: #f8fafc;">
+                        <label style="display:flex; align-items:center; gap:5px; font-weight:normal; font-size:13px; cursor:pointer;"><input type="checkbox" name="schedulePeriods" value="1"> ຊ.ມ 1</label>
+                        <label style="display:flex; align-items:center; gap:5px; font-weight:normal; font-size:13px; cursor:pointer;"><input type="checkbox" name="schedulePeriods" value="2"> ຊ.ມ 2</label>
+                        <label style="display:flex; align-items:center; gap:5px; font-weight:normal; font-size:13px; cursor:pointer;"><input type="checkbox" name="schedulePeriods" value="3"> ຊ.ມ 3</label>
+                        <label style="display:flex; align-items:center; gap:5px; font-weight:normal; font-size:13px; cursor:pointer;"><input type="checkbox" name="schedulePeriods" value="4"> ຊ.ມ 4</label>
+                        <label style="display:flex; align-items:center; gap:5px; font-weight:normal; font-size:13px; cursor:pointer;"><input type="checkbox" name="schedulePeriods" value="5"> ຊ.ມ 5</label>
+                        <label style="display:flex; align-items:center; gap:5px; font-weight:normal; font-size:13px; cursor:pointer;"><input type="checkbox" name="schedulePeriods" value="6"> ຊ.ມ 6</label>
+                        <label style="display:flex; align-items:center; gap:5px; font-weight:normal; font-size:13px; cursor:pointer;"><input type="checkbox" name="schedulePeriods" value="7"> ຊ.ມ 7</label>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-light" onclick="closeModal('scheduleModal')">ຍົກເລີກ</button>
+            <button class="btn btn-primary" onclick="saveSchedule()">💾 ບັນທຶກ</button>
+        </div>
+    </div>
+</div>
+<!-- VERSION MODAL (ສ້າງເວີຊັ່ນໃໝ່) -->
+<div class="modal-bg" id="versionModal">
+    <div class="modal" style="width: 400px;">
+        <div class="modal-head">
+            <div class="modal-title">ສ້າງເວີຊັ່ນຕາຕະລາງໃໝ່</div>
+            <button class="close" onclick="closeModal('versionModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div style="font-size: 13px; color: #64748b; margin-bottom: 12px; background: #f8fafc; padding: 12px; border-radius: 8px;">
+                ລະບົບຈະກ໋ອບປີ້ຕາຕະລາງສອນ <b style="color:var(--primary);">"ທີ່ກຳລັງສະແດງຜົນຢູ່"</b> ທັງໝົດ ໄປເກັບເປັນເວີຊັ່ນໃໝ່ ເພື່ອໃຫ້ທ່ານສາມາດດັດແກ້ອັນໃໝ່ ໂດຍທີ່ປະຫວັດອັນເກົ່າຍັງຄົງເດີມ.
+            </div>
+            <div class="form-group full">
+                <label>ຊື່ເວີຊັ່ນໃໝ່ *</label>
+                <input id="newVersionName" placeholder="ເຊັ່ນ: ພາກຮຽນ 1 (ຫຼັງຍ້າຍຄູ ສົມສີ)">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-light" onclick="closeModal('versionModal')">ຍົກເລີກ</button>
+            <button class="btn btn-primary" onclick="saveNewVersion()">💾 ບັນທຶກເວີຊັ່ນ</button>
+        </div>
+    </div>
+</div>
+<!-- SLOT EDIT MODAL (ຈັດການຊົ່ວໂມງສອນລາຍບຸກຄົນດ້ວຍມື) -->
+<div class="modal-bg" id="slotEditModal">
+    <div class="modal" style="width: 450px;">
+        <div class="modal-head">
+            <div class="modal-title" id="slotModalTitle">ແກ້ໄຂຕາຕະລາງສອນ</div>
+            <button class="close" onclick="closeModal('slotEditModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <div style="background: #f1f5f9; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px;">
+                <b id="slotOriginTeacher" style="color: var(--primary);"></b>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>ຄູສອນ (ຖ້າຕ້ອງການປ່ຽນຄູ)</label>
+                    <select id="slotTeacherSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label>ວັນສອນ</label>
+                    <select id="slotDay">
+                        <option value="1">ວັນຈັນ</option>
+                        <option value="2">ວັນອັງຄານ</option>
+                        <option value="3">ວັນພຸດ</option>
+                        <option value="4">ວັນພະຫັດ</option>
+                        <option value="5">ວັນສຸກ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ຊົ່ວໂມງທີ</label>
+                    <select id="slotPeriod">
+                        <option value="1">1 (ຕອນເຊົ້າ)</option><option value="2">2 (ຕອນເຊົ້າ)</option>
+                        <option value="3">3 (ຕອນເຊົ້າ)</option><option value="4">4 (ຕອນເຊົ້າ)</option>
+                        <option value="5">5 (ຕອນບ່າຍ)</option><option value="6">6 (ຕອນບ່າຍ)</option>
+                        <option value="7">7 (ຕອນບ່າຍ)</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>ວິຊາສອນ</label>
+                    <select id="slotSubject"></select>
+                </div>
+                <div class="form-group full">
+                    <label>ຫ້ອງຮຽນ (ເຊັ່ນ: ມ.5/1)</label>
+                    <input id="slotRoom" list="roomList" placeholder="ກະລຸນາປ້ອນຊື່ຫ້ອງ">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="justify-content: space-between;">
+            <button class="btn btn-danger" id="btnDeleteSlot" onclick="deleteSlotEdit()">🗑️ ລຶບອອກ</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-light" onclick="closeModal('slotEditModal')">ຍົກເລີກ</button>
+                <button class="btn btn-primary" onclick="saveSlotEdit()">💾 ບັນທຶກການປ່ຽນແປງ</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- USER MODAL (ສຳລັບເພີ່ມ/ແກ້ໄຂຜູ້ໃຊ້) -->
+<div class="modal-bg" id="userModal">
+    <div class="modal" style="width: 500px;">
+        <div class="modal-head">
+            <div class="modal-title" id="userModalTitle">ເພີ່ມຜູ້ໃຊ້ໃໝ່</div>
+            <button class="close" onclick="closeModal('userModal')">×</button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="editUserId">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label>ຊື່ຜູ້ໃຊ້ (Username) *</label>
+                    <input id="userUsername" placeholder="ເຊັ່ນ: school_abc">
+                </div>
+                <div class="form-group full">
+                    <label>ລະຫັດຜ່ານ (Password) *</label>
+                    <input id="userPassword" type="text" placeholder="ກຳນົດລະຫັດຜ່ານ">
+                </div>
+                <div class="form-group full">
+                    <label>ສິດການນຳໃຊ້ (Role) *</label>
+                    <select id="userRole" onchange="toggleUserScope()">
+                        <option value="admin">ແອັດມິນ (Admin) - ເຫັນທຸກຂໍ້ມູນ</option>
+                        <option value="district">ຂັ້ນເມືອງ - ເຫັນສະເພາະເມືອງ</option>
+                        <option value="school" selected>ໂຮງຮຽນ - ເຫັນສະເພາະໂຮງຮຽນ</option>
+                    </select>
+                </div>
+                <div class="form-group full" id="groupUserScope">
+                    <label id="labelUserScope">ເລືອກຫົວໜ່ວຍຮັບຜິດຊອບ *</label>
+                    <select id="userScope"></select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-light" onclick="closeModal('userModal')">ຍົກເລີກ</button>
+            <button class="btn btn-primary" onclick="saveUser()">💾 ບັນທຶກ</button>
+        </div>
+    </div>
+</div>
+<!-- SYSTEM DIALOG MODAL (ສຳລັບແຈ້ງເຕືອນ ແລະ ຢືນຢັນ) -->
+<div class="modal-bg" id="sysDialogModal" style="z-index: 9999;">
+    <div class="modal" style="width: 380px; text-align: center; padding: 30px 25px; border-radius: 18px; border: none;">
+        <div id="sysDialogIcon" style="font-size: 48px; margin-bottom: 15px;">❓</div>
+        <div id="sysDialogMessage" style="font-size: 15px; margin-bottom: 25px; color: #334155; line-height: 1.6; white-space: pre-line; font-weight: 500;"></div>
+        <div style="display: flex; gap: 12px; justify-content: center;">
+            <button class="btn btn-light" id="sysBtnCancel" style="min-width: 110px; padding: 12px; font-size: 14px; border-radius: 10px; font-weight: 600;">ຍົກເລີກ</button>
+            <button class="btn btn-primary" id="sysBtnConfirm" style="min-width: 110px; padding: 12px; font-size: 14px; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);">ຕົກລົງ</button>
+        </div>
+    </div>
+</div>
+<script>
+
+/* ============================== DATA ============================== */
+let teachers = JSON.parse(localStorage.getItem('teachers') || '[]');
+let assignments = JSON.parse(localStorage.getItem('assignments') || '{}');
+
+// ລະບົບ Version Control
+let scheduleVersions = JSON.parse(localStorage.getItem('scheduleVersions') || '[]');
+let activeVersionId = localStorage.getItem('activeVersionId') || 'default';
+let schedules = [];
+
+// Migrate ຂໍ້ມູນເກົ່າໃຫ້ກາຍເປັນເວີຊັ່ນແຮກ ອັດຕະໂນມັດ
+if (scheduleVersions.length === 0) {
+    let oldSchedules = JSON.parse(localStorage.getItem('schedules') || '[]');
+    scheduleVersions.push({
+        id: 'default',
+        name: 'ຕາຕະລາງຕົ້ນສະບັບ',
+        data: oldSchedules,
+        createdAt: new Date().toISOString()
+    });
+    localStorage.setItem('scheduleVersions', JSON.stringify(scheduleVersions));
+    localStorage.setItem('activeVersionId', 'default');
+}
+
+// ຟັງຊັນໂຫຼດຂໍ້ມູນເວີຊັ່ນປັດຈຸບັນ
+function loadActiveVersion() {
+    let version = scheduleVersions.find(v => v.id === activeVersionId);
+    if (!version) {
+        version = scheduleVersions[0];
+        activeVersionId = version.id;
+        localStorage.setItem('activeVersionId', activeVersionId);
+    }
+    schedules = [...version.data]; // ສຳເນົາຂໍ້ມູນມາໃຊ້ງານ
+}
+loadActiveVersion(); // ເອີ້ນໃຊ້ທັນທີເມື່ອໂຫຼດລະບົບ
+
+// ຖານຂໍ້ມູນວິຊາສອນ ແບ່ງຕາມຊັ້ນຮຽນ ມ.1 - ມ.7
+let defaultSubjects = [
+    // ມ.1
+    {id: 'm1_1', grade: 'ມ.1', name: 'ພາສາລາວ ແລະ ວັນນະຄະດີ', hours: 4, note: ''},
+    {id: 'm1_2', grade: 'ມ.1', name: 'ຄະນິດສາດ', hours: 4, note: ''},
+    {id: 'm1_3', grade: 'ມ.1', name: 'ວິທະຍາສາດທຳມະຊາດ', hours: 4, note: ''},
+    {id: 'm1_4', grade: 'ມ.1', name: 'ວິທະຍາສາດສັງຄົມ (ປະຫວັດສາດ ແລະ ພູມສາດ)', hours: 3, note: ''},
+    {id: 'm1_5', grade: 'ມ.1', name: 'ສຶກສາພົນລະເມືອງ', hours: 1, note: ''},
+    {id: 'm1_6', grade: 'ມ.1', name: 'ເຕັກໂນໂລຊີ (ພື້ນຖານວິຊາຊີບ ແລະ ເຕັກໂນໂລຊີ ຂໍ້ມູນຂ່າວສານ ການສື່ສານ)', hours: 2, note: ''},
+    {id: 'm1_7', grade: 'ມ.1', name: 'ສິລະປະສຶກສາ (ສິລະປະດົນຕີ ແລະ ສິລະປະກຳ)', hours: 2, note: ''},
+    {id: 'm1_8', grade: 'ມ.1', name: 'ພະລະສຶກສາ', hours: 2, note: ''},
+    {id: 'm1_9', grade: 'ມ.1', name: 'ພາສາຕ່າງປະເທດ', hours: 6, note: ''},
+
+    // ມ.2
+    {id: 'm2_1', grade: 'ມ.2', name: 'ພາສາລາວ ແລະ ວັນນະຄະດີ', hours: 4, note: ''},
+    {id: 'm2_2', grade: 'ມ.2', name: 'ຄະນິດສາດ', hours: 4, note: ''},
+    {id: 'm2_3', grade: 'ມ.2', name: 'ວິທະຍາສາດທຳມະຊາດ', hours: 4, note: ''},
+    {id: 'm2_4', grade: 'ມ.2', name: 'ວິທະຍາສາດສັງຄົມ (ປະຫວັດສາດ ແລະ ພູມສາດ)', hours: 3, note: ''},
+    {id: 'm2_5', grade: 'ມ.2', name: 'ສຶກສາພົນລະເມືອງ', hours: 1, note: ''},
+    {id: 'm2_6', grade: 'ມ.2', name: 'ເຕັກໂນໂລຊີ (ພື້ນຖານວິຊາຊີບ ແລະ ເຕັກໂນໂລຊີ ຂໍ້ມູນຂ່າວສານ ການສື່ສານ)', hours: 2, note: ''},
+    {id: 'm2_7', grade: 'ມ.2', name: 'ສິລະປະສຶກສາ (ສິລະປະດົນຕີ ແລະ ສິລະປະກຳ)', hours: 2, note: ''},
+    {id: 'm2_8', grade: 'ມ.2', name: 'ພະລະສຶກສາ', hours: 2, note: ''},
+    {id: 'm2_9', grade: 'ມ.2', name: 'ພາສາຕ່າງປະເທດ', hours: 6, note: ''},
+
+    // ມ.3
+    {id: 'm3_1', grade: 'ມ.3', name: 'ພາສາລາວ ແລະ ວັນນະຄະດີ', hours: 4, note: ''},
+    {id: 'm3_2', grade: 'ມ.3', name: 'ຄະນິດສາດ', hours: 4, note: ''},
+    {id: 'm3_3', grade: 'ມ.3', name: 'ວິທະຍາສາດທຳມະຊາດ', hours: 5, note: ''},
+    {id: 'm3_4', grade: 'ມ.3', name: 'ວິທະຍາສາດສັງຄົມ (ປະຫວັດສາດ ແລະ ພູມສາດ)', hours: 4, note: ''},
+    {id: 'm3_5', grade: 'ມ.3', name: 'ສຶກສາພົນລະເມືອງ', hours: 1, note: ''},
+    {id: 'm3_6', grade: 'ມ.3', name: 'ເຕັກໂນໂລຊີ (ພື້ນຖານວິຊາຊີບ ແລະ ເຕັກໂນໂລຊີ ຂໍ້ມູນຂ່າວສານ ການສື່ສານ)', hours: 2, note: ''},
+    {id: 'm3_7', grade: 'ມ.3', name: 'ສິລະປະສຶກສາ (ສິລະປະດົນຕີ ແລະ ສິລະປະກຳ)', hours: 2, note: ''},
+    {id: 'm3_8', grade: 'ມ.3', name: 'ພະລະສຶກສາ', hours: 2, note: ''},
+    {id: 'm3_9', grade: 'ມ.3', name: 'ພາສາຕ່າງປະເທດ', hours: 4, note: ''},
+
+    // ມ.4
+    {id: 'm4_1', grade: 'ມ.4', name: 'ພາສາລາວ ແລະ ວັນນະຄະດີ', hours: 4, note: ''},
+    {id: 'm4_2', grade: 'ມ.4', name: 'ຄະນິດສາດ', hours: 4, note: ''},
+    {id: 'm4_3', grade: 'ມ.4', name: 'ວິທະຍາສາດທຳມະຊາດ', hours: 5, note: ''},
+    {id: 'm4_4', grade: 'ມ.4', name: 'ວິທະຍາສາດສັງຄົມ (ປະຫວັດສາດ ແລະ ພູມສາດ)', hours: 4, note: ''},
+    {id: 'm4_5', grade: 'ມ.4', name: 'ສຶກສາພົນລະເມືອງ', hours: 1, note: ''},
+    {id: 'm4_6', grade: 'ມ.4', name: 'ເຕັກໂນໂລຊີ (ພື້ນຖານວິຊາຊີບ ແລະ ເຕັກໂນໂລຊີ ຂໍ້ມູນຂ່າວສານ ການສື່ສານ)', hours: 2, note: ''},
+    {id: 'm4_7', grade: 'ມ.4', name: 'ສິລະປະສຶກສາ (ສິລະປະດົນຕີ ແລະ ສິລະປະກຳ)', hours: 2, note: ''},
+    {id: 'm4_8', grade: 'ມ.4', name: 'ພະລະສຶກສາ', hours: 2, note: ''},
+    {id: 'm4_9', grade: 'ມ.4', name: 'ພາສາຕ່າງປະເທດ', hours: 4, note: ''},
+
+    // ມ.5
+    {id: 'm5_1', grade: 'ມ.5', name: 'ພາສາລາວ ແລະ ວັນນະຄະດີ', hours: 4, note: ''},
+    {id: 'm5_2', grade: 'ມ.5', name: 'ຄະນິດສາດ', hours: 4, note: ''},
+    {id: 'm5_3', grade: 'ມ.5', name: 'ຟີຊິກສາດ', hours: 2, note: ''},
+    {id: 'm5_4', grade: 'ມ.5', name: 'ເຄມີສາດ', hours: 2, note: ''},
+    {id: 'm5_5', grade: 'ມ.5', name: 'ຊີວະວິທະຍາ', hours: 2, note: ''},
+    {id: 'm5_6', grade: 'ມ.5', name: 'ປະຫວັດສາດ', hours: 2, note: ''},
+    {id: 'm5_7', grade: 'ມ.5', name: 'ພູມສາດ', hours: 2, note: ''},
+    {id: 'm5_8', grade: 'ມ.5', name: 'ສຶກສາພົນລະເມືອງ', hours: 1, note: ''},
+    {id: 'm5_9', grade: 'ມ.5', name: 'ເຕັກໂນໂລຊີຂໍ້ມູນຂ່າວສານ ແລະ ການສື່ສານ (ICT)', hours: 1, note: ''},
+    {id: 'm5_10', grade: 'ມ.5', name: 'ພະລະສຶກສາ', hours: 2, note: ''},
+    {id: 'm5_11', grade: 'ມ.5', name: 'ພາສາຕ່າງປະເທດທີ 1 (ອັງກິດ)', hours: 3, note: ''},
+    {id: 'm5_12', grade: 'ມ.5', name: 'ພື້ນຖານວິຊາຊີບ', hours: 2, note: ''},
+    {id: 'm5_13', grade: 'ມ.5', name: 'ສິລະປະສຶກສາ', hours: 2, note: ''},
+    {id: 'm5_14', grade: 'ມ.5', name: 'ພາສາຕ່າງປະເທດທີ 2', hours: 1, note: ''},
+
+    // ມ.6
+    {id: 'm6_1', grade: 'ມ.6', name: 'ພາສາລາວ ແລະ ວັນນະຄະດີ', hours: 4, note: ''},
+    {id: 'm6_2', grade: 'ມ.6', name: 'ຄະນິດສາດ', hours: 4, note: ''},
+    {id: 'm6_3', grade: 'ມ.6', name: 'ຟີຊິກສາດ', hours: 2, note: ''},
+    {id: 'm6_4', grade: 'ມ.6', name: 'ເຄມີສາດ', hours: 2, note: ''},
+    {id: 'm6_5', grade: 'ມ.6', name: 'ຊີວະວິທະຍາ', hours: 2, note: ''},
+    {id: 'm6_6', grade: 'ມ.6', name: 'ປະຫວັດສາດ', hours: 2, note: ''},
+    {id: 'm6_7', grade: 'ມ.6', name: 'ພູມສາດ', hours: 2, note: ''},
+    {id: 'm6_8', grade: 'ມ.6', name: 'ສຶກສາພົນລະເມືອງ', hours: 1, note: ''},
+    {id: 'm6_9', grade: 'ມ.6', name: 'ເຕັກໂນໂລຊີຂໍ້ມູນຂ່າວສານ ແລະ ການສື່ສານ (ICT)', hours: 1, note: ''},
+    {id: 'm6_10', grade: 'ມ.6', name: 'ພະລະສຶກສາ', hours: 2, note: ''},
+    {id: 'm6_11', grade: 'ມ.6', name: 'ພາສາຕ່າງປະເທດທີ 1 (ອັງກິດ)', hours: 3, note: ''},
+    {id: 'm6_12', grade: 'ມ.6', name: 'ພື້ນຖານວິຊາຊີບ', hours: 2, note: ''},
+    {id: 'm6_13', grade: 'ມ.6', name: 'ສິລະປະສຶກສາ', hours: 2, note: ''},
+    {id: 'm6_14', grade: 'ມ.6', name: 'ພາສາຕ່າງປະເທດທີ 2', hours: 1, note: ''},
+
+    // ມ.7
+    {id: 'm7_1', grade: 'ມ.7', name: 'ພາສາລາວ ແລະ ວັນນະຄະດີ', hours: 4, note: ''},
+    {id: 'm7_2', grade: 'ມ.7', name: 'ຄະນິດສາດ', hours: 4, note: ''},
+    {id: 'm7_3', grade: 'ມ.7', name: 'ຟີຊິກສາດ', hours: 3, note: ''},
+    {id: 'm7_4', grade: 'ມ.7', name: 'ເຄມີສາດ', hours: 2, note: ''},
+    {id: 'm7_5', grade: 'ມ.7', name: 'ຊີວະວິທະຍາ', hours: 2, note: ''},
+    {id: 'm7_6', grade: 'ມ.7', name: 'ປະຫວັດສາດ', hours: 2, note: ''},
+    {id: 'm7_7', grade: 'ມ.7', name: 'ພູມສາດ', hours: 2, note: ''},
+    {id: 'm7_8', grade: 'ມ.7', name: 'ສຶກສາພົນລະເມືອງ', hours: 2, note: ''},
+    {id: 'm7_9', grade: 'ມ.7', name: 'ເຕັກໂນໂລຊີຂໍ້ມູນຂ່າວສານ ແລະ ການສື່ສານ (ICT)', hours: 2, note: ''},
+    {id: 'm7_10', grade: 'ມ.7', name: 'ພະລະສຶກສາ', hours: 2, note: ''},
+    {id: 'm7_11', grade: 'ມ.7', name: 'ພາສາຕ່າງປະເທດທີ 1 (ອັງກິດ)', hours: 3, note: ''},
+    {id: 'm7_12', grade: 'ມ.7', name: 'ພາສາຕ່າງປະເທດທີ 2', hours: 2, note: ''}
+];
+
+// ໂຫຼດຂໍ້ມູນວິຊາຈາກ LocalStorage, ຖ້າບໍ່ມີຈຶ່ງໃຊ້ defaultSubjects
+let subjects = JSON.parse(localStorage.getItem('subjects'));
+if (!subjects || subjects.length === 0) {
+    subjects = defaultSubjects;
+    localStorage.setItem('subjects', JSON.stringify(subjects));
+}
+/* ============================== SCHOOLS DATA & HIERARCHY ============================== */
+const defaultSchoolsData = {
+    "ພະແນກສຶກສາທິການ ແລະ ກິລາແຂວງ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ໄຊຍະບູລີ", "ມັດທະຍົມສຶກສາສົມບູນ ສົງ", "ມັດທະຍົມສຶກສາສົມບູນ ຊົນເຜົ່າ ແຂວງໄຊຍະບູລີ", "ໂຮງຮຽນເຕັກນິກວິຊາຊີບແບບປະສົມ ແຂວງ ໄຊຍະບູລີ"
+    ],
+    "ເມືອງ ໄຊຍະບູລີ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ກວາງຄຳ", "ມັດທະຍົມສຶກສາສົມບູນ ນາຍາວ", "ມັດທະຍົມສຶກສາສົມບູນ ນາຕາກ", "ມັດທະຍົມສຶກສາສົມບູນ ນາມອນ", "ມັດທະຍົມສຶກສາສົມບູນ ນາລວມ", "ມັດທະຍົມສຶກສາສົມບູນ ນາຫຼາ", "ມັດທະຍົມສຶກສາສົມບູນ ຜາຊ້າງ", "ມັດທະຍົມສຶກສາສົມບູນ ພັດທະນາ", "ມັດທະຍົມສຶກສາສົມບູນ ຫ້ວຍຈີດ", "ມັດທະຍົມສຶກສາສົມບູນ ເອກະພາບ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ທ່າເດື່ອ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ມິດຕະພາບ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ຫ້ວຍຂົວຫຼວງ"
+    ],
+    "ເມືອງ ຄອບ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ດອນຕັນ", "ມັດທະຍົມສຶກສາສົມບູນ ປາງໄຮ", "ມັດທະຍົມສຶກສາສົມບູນ ມ່ວງດອນມູນ", "ມັດທະຍົມສຶກສາສົມບູນ ເມືອງຄອບ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ຖ້ຳຜາງອຍ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນ້ຳຄ່າ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ຫາດງາມ"
+    ],
+    "ເມືອງ ຫົງສາ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ຄົກແອກ", "ມັດທະຍົມສຶກສາສົມບູນ ນາປຸ່ງ", "ມັດທະຍົມສຶກສາສົມບູນ ນ້ຳຕັບ", "ມັດທະຍົມສຶກສາສົມບູນ ພູແລ້ງ", "ມັດທະຍົມສຶກສາສົມບູນ ຫົງສາ", "ມັດທະຍົມສຶກສາສົມບູນ ເມືອງຫານ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ທ່າຊ່ວງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ປາກຫ້ວຍຍາງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ສົງ ຫົງສາ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ແທ່ນຄຳ"
+    ],
+    "ເມືອງ ເງິນ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ນ້ຳເງີນ", "ມັດທະຍົມສຶກສາສົມບູນ ບ້ານທອງ", "ມັດທະຍົມສຶກສາສົມບູນ ເມືອງເງິນ", "ມັດທະຍົມສຶກສາສົມບູນ ສິນໄຊ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ດອກເຜິ້ງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ສາມັກຄີໄຊ", "ໂຮງຮຽນມັດທະຍົມຕົ້ນສົງເມືອງເງິນ"
+    ],
+    "ເມືອງ ຊຽງຮ່ອນ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ດອນມູນ", "ມັດທະຍົມສຶກສາສົມບູນ ທົ່ງກາບ", "ມັດທະຍົມສຶກສາສົມບູນ ບ້ານແກ່ນ", "ມັດທະຍົມສຶກສາສົມບູນ ປາກເປັດ", "ມັດທະຍົມສຶກສາສົມບູນ ມົກສະຕຸ", "ມັດທະຍົມສົມບູນຊຽງຮ່ອນ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ປົ່ງມ່ອນ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ລາວສະໂນ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ຫ້ວຍຄູນ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ຮ່ອງຄູ"
+    ],
+    "ເມືອງ ພຽງ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ກິ່ວແຄ່ມ", "ມັດທະຍົມສຶກສາສົມບູນ ນາຕານ", "ມັດທະຍົມສຶກສາສົມບູນ ນາແວນ", "ມັດທະຍົມສຶກສາສົມບູນ ມິດປະຊາ", "ມັດທະຍົມສຶກສາສົມບູນ ອາດໄຊຍະພູມ", "ມັດທະຍົມສຶກສາສົມບູນ ເມືອງພຽງ", "ມັດທະຍົມສຶກສາສົມບູນ ນາມໍ້", "ມັດທະຍົມສຶກສາສົມບູນ ສົງ ເມືອງພຽງ", "ມັດທະຍົມສຶກສາສົມບູນ ໄຊສະຫວາດ"
+    ],
+    "ເມືອງ ປາກລາຍ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ນ້ຳຊົ້ງ", "ມັດທະຍົມສຶກສາສົມບູນ ນ້ຳພູນ", "ມັດທະຍົມສຶກສາສົມບູນ ບວມເລົາ", "ມັດທະຍົມສຶກສາສົມບູນ ບຸ່ງມາ", "ມັດທະຍົມສຶກສາສົມບູນ ບ້ານມ່ວງ", "ມັດທະຍົມສຶກສາສົມບູນ ປາກລາຍ", "ມັດທະຍົມສຶກສາສົມບູນ ປ່າໄລ່", "ມັດທະຍົມສຶກສາສົມບູນ ເມືອງວາ", "ມັດທະຍົມສົມບູນ ເມືອງປາ", "ມັດທະຍົມສຶກສາ ສົງ ປາກລາຍ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນາກາງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນາຄະຍາງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນາຕຸງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນາໂພ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ບ້ານກາງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ປາກລາຍ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ຫ້ວຍມົດສົ້ມ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ໜອງໄຄ້"
+    ],
+    "ເມືອງ ແກ່ນທ້າວ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ດອນເມນ", "ມັດທະຍົມສຶກສາສົມບູນ ຫ້ວຍເລິກ", "ມັດທະຍົມສຶກສາສົມບູນ ເມືອງຫມໍ", "ມັດທະຍົມສຶກສາສົມບູນ ແກ່ນທ້າວ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນາຫີນ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ບ້ານໜອງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ປາກແຄມ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ວັງປາ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ສົງ ແກ່ນທ້າວ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ເວີນຄຳ"
+    ],
+    "ເມືອງ ບໍ່ແຕນ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ບໍ່ແຕນ", "ມັດທະຍົມສຶກສາສົມບູນ ບໍ່ແຕນມີໄຊ", "ມັດທະຍົມສຶກສາສົມບູນ ນ້ຳພຸ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນາກອກ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ນາບໍ່ນ້ອຍ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ໜອງຜັກບົ້ງ"
+    ],
+    "ເມືອງ ທົ່ງມີໄຊ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ທົ່ງມີໄຊ", "ມັດທະຍົມສຶກສາສົມບູນ ນາມ່ວງ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ບ້ານໃຫມ່", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ສົງ ທົ່ງມີໄຊ"
+    ],
+    "ເມືອງ ໄຊສະຖານ": [
+        "ມັດທະຍົມສຶກສາສົມບູນ ກີ່ວມີໄຊ", "ມັດທະຍົມສຶກສາສົມບູນ ດອຍກາວ", "ມັດທະຍົມສຶກສາສົມບູນ ບ້ານກໍ່", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ຊະນະໄຊ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ພູຕຸ່ຍ", "ມັດທະຍົມສຶກສາຕອນຕົ້ນ ພູເລີ່ນ"
+    ]
+};
+
+// ບັງຄັບອັບເດດຂໍ້ມູນໂຮງຮຽນໃໝ່ທັບອັນເກົ່າໃນ LocalStorage ສະເໝີ
+// (ເພາະຖ້າບໍ່ເຮັດແນວນີ້ ບຣາວເຊີຈະຈື່ແຕ່ລາຍຊື່ເກົ່າທີ່ເຄີຍບັນທຶກໄວ້)
+let schoolHierarchy = JSON.parse(localStorage.getItem('schoolHierarchy'));
+schoolHierarchy = defaultSchoolsData; 
+localStorage.setItem('schoolHierarchy', JSON.stringify(schoolHierarchy));
+
+// ໂຫຼດລາຍຊື່ເມືອງເຂົ້າ Dropdown
+function initDistrictDropdown() {
+    const distSelect = document.getElementById('teacherDistrict');
+    if(!distSelect) return;
+    distSelect.innerHTML = '<option value="">-- ເລືອກສັງກັດ --</option>';
+    Object.keys(schoolHierarchy).forEach(dist => {
+        distSelect.innerHTML += `<option value="${dist}">${dist}</option>`;
+    });
+}
+
+// ອັບເດດລາຍຊື່ໂຮງຮຽນ ເມື່ອເລືອກເມືອງ
+function updateTeacherSchools(selectedSchool = '') {
+    const dist = document.getElementById('teacherDistrict').value;
+    const schoolSelect = document.getElementById('teacherSchool');
+    schoolSelect.innerHTML = '<option value="">-- ເລືອກໂຮງຮຽນ --</option>';
+
+    if(dist && schoolHierarchy[dist]) {
+        schoolHierarchy[dist].forEach(sch => {
+            schoolSelect.innerHTML += `<option value="${sch}">${sch}</option>`;
+        });
+    }
+
+    if(selectedSchool) {
+        schoolSelect.value = selectedSchool;
+    }
+}
+
+// ຟັງຊັນເພີ່ມໂຮງຮຽນໃໝ່ເຂົ້າໃນເມືອງນັ້ນໆແບບດ່ວນ (ຕອບໂຈດການເພີ່ມ/ດັດແກ້)
+function addNewSchoolPrompt() {
+    const dist = document.getElementById('teacherDistrict').value;
+    if(!dist) {
+        alert("ກະລຸນາເລືອກ ສັງກັດ(ເມືອງ) ກ່ອນເພີ່ມໂຮງຮຽນໃໝ່!");
+        return;
+    }
+    const newSchool = prompt(`ເພີ່ມຊື່ໂຮງຮຽນໃໝ່ ສຳລັບ ${dist}:`);
+    if(newSchool && newSchool.trim() !== '') {
+        schoolHierarchy[dist].push(newSchool.trim());
+        localStorage.setItem('schoolHierarchy', JSON.stringify(schoolHierarchy)); // ບັນທຶກລົງເຄື່ອງ
+        updateTeacherSchools(newSchool.trim()); // ອັບເດດ Dropdown ທັນທີ
+    }
+}
+
+// ເອີ້ນໃຊ້ຕອນໂຫຼດໜ້າເວັບ
+document.addEventListener('DOMContentLoaded', () => {
+    initDistrictDropdown();
+});
+
+/* ============================== CUSTOM POPUP DIALOG (ປັບປຸງໃໝ່ປ້ອງກັນ Error) ============================== */
+function sysConfirm(message) {
+    return new Promise(resolve => {
+        const modal = document.getElementById('sysDialogModal');
+        const icon = document.getElementById('sysDialogIcon');
+        const msgEl = document.getElementById('sysDialogMessage');
+        
+        // ຖ້າຫາໂຄດ HTML ຂອງປ໋ອບອັບບໍ່ເຫັນ ໃຫ້ໃຊ້ Confirm ມາດຕະຖານຂອງບຣາວເຊີແທນ
+        if (!modal || !icon || !msgEl) {
+            resolve(confirm(message));
+            return;
+        }
+
+        icon.textContent = '❓';
+        msgEl.textContent = message;
+        
+        const btnConfirm = document.getElementById('sysBtnConfirm');
+        const btnCancel = document.getElementById('sysBtnCancel');
+        
+        btnConfirm.className = 'btn btn-primary';
+        btnConfirm.textContent = 'ຕົກລົງ';
+        btnCancel.style.display = 'inline-block';
+        
+        modal.classList.add('show');
+        
+        btnConfirm.onclick = () => { modal.classList.remove('show'); resolve(true); };
+        btnCancel.onclick = () => { modal.classList.remove('show'); resolve(false); };
+    });
+}
+
+function sysAlert(message) {
+    return new Promise(resolve => {
+        const modal = document.getElementById('sysDialogModal');
+        const icon = document.getElementById('sysDialogIcon');
+        const msgEl = document.getElementById('sysDialogMessage');
+        
+        // ຖ້າຫາໂຄດ HTML ຂອງປ໋ອບອັບບໍ່ເຫັນ ໃຫ້ໃຊ້ Alert ມາດຕະຖານຂອງບຣາວເຊີແທນ
+        if (!modal || !icon || !msgEl) {
+            alert(message);
+            resolve(true);
+            return;
+        }
+
+        icon.textContent = '⚠️';
+        msgEl.textContent = message;
+        
+        const btnConfirm = document.getElementById('sysBtnConfirm');
+        const btnCancel = document.getElementById('sysBtnCancel');
+        
+        btnConfirm.className = 'btn btn-primary';
+        btnConfirm.textContent = 'ຕົກລົງ';
+        btnCancel.style.display = 'none';
+        
+        modal.classList.add('show');
+        
+        btnConfirm.onclick = () => { modal.classList.remove('show'); resolve(true); };
+    });
+}
+
+/* ============================== PROVINCE & DISTRICT DATA ============================== */
+const districtData = {
+    "ນະຄອນຫຼວງວຽງຈັນ": ["ຈັນທະບູລີ", "ສີໂຄດຕະບອງ", "ໄຊເສດຖາ", "ສີສັດຕະນາກ", "ນາຊາຍທອງ", "ໄຊທານີ", "ຫາດຊາຍຟອງ", "ສັງທອງ", "ປາກງື່ມ"],
+    "ຜົ້ງສາລີ": ["ຜົ້ງສາລີ", "ໃໝ່", "ຂວາ", "ສຳພັນ", "ບຸນເໜືອ", "ຍອດອູ", "ບຸນໃຕ້"],
+    "ຫຼວງນ້ຳທາ": ["ຫຼວງນ້ຳທາ", "ສິງ", "ລອງ", "ວຽງພູຄາ", "ນາແລ"],
+    "ອຸດົມໄຊ": ["ໄຊ", "ຫຼາ", "ນາໝໍ້", "ງາ", "ແບ່ງ", "ຮຸນ", "ປາກແບ່ງ"],
+    "ບໍ່ແກ້ວ": ["ຫ້ວຍຊາຍ", "ຕົ້ນເຜິ້ງ", "ເມິງ", "ຜາອຸດົມ", "ປາກທາ"],
+    "ຫຼວງພະບາງ": ["ຫຼວງພະບາງ", "ຊຽງເງິນ", "ນານ", "ປາກອູ", "ນ້ຳບາກ", "ງອຍ", "ປາກແຊງ", "ໂພນໄຊ", "ຈອມເພັດ", "ວຽງຄຳ", "ພູຄູນ", "ໂພນທອງ"],
+    "ຫົວພັນ": ["ຊຳເໜືອ", "ຊຽງຄໍ້", "ວຽງທອງ", "ວຽງໄຊ", "ຫົວເມືອງ", "ຊຳໃຕ້", "ສົບເບົາ", "ແອດ", "ກວັນ", "ຊ່ອນ"],
+    "ໄຊຍະບູລີ": ["ໄຊຍະບູລີ", "ຄອບ", "ຊຽງຮ່ອນ", "ເງິນ", "ຫົງສາ", "ພຽງ", "ປາກລາຍ", "ແກ່ນທ້າວ", "ບໍ່ແຕນ", "ທົ່ງມີໄຊ", "ໄຊສະຖານ"],
+    "ຊຽງຂວາງ": ["ແປກ", "ຄຳ", "ໜອງແຮດ", "ຄູນ", "ໝອກໃໝ່", "ພູກູດ", "ຜາໄຊ"],
+    "ວຽງຈັນ": ["ໂພນໂຮງ", "ທຸລະຄົມ", "ແກ້ວອຸດົມ", "ກາສີ", "ວັງວຽງ", "ເຟືອງ", "ຊະນະຄາມ", "ແມດ", "ວຽງຄຳ", "ໝື່ນ"],
+    "ບໍລິຄຳໄຊ": ["ປາກຊັນ", "ທ່າພະບາດ", "ປາກກະດິງ", "ບໍລິຄັນ", "ຄຳເກີດ", "ວຽງທອງ", "ໄຊຈຳພອນ"],
+    "ຄຳມ່ວນ": ["ທ່າແຂກ", "ມະຫາໄຊ", "ໜອງບົກ", "ຫີນບູນ", "ຍົມມະລາດ", "ບົວລະພາ", "ນາກາຍ", "ເຊບັ້ງໄຟ", "ໄຊບົວທອງ", "ຄູນຄຳ"],
+    "ສະຫວັນນະເຂດ": ["ໄກສອນ ພົມວິຫານ", "ອຸທຸມພອນ", "ອາດສະພັງທອງ", "ພີນ", "ເຊໂປນ", "ນອງ", "ທ່າປາງທອງ", "ສອງຄອນ", "ຈຳພອນ", "ຊົນນະບູລີ", "ໄຊບູລີ", "ວີລະບູລີ", "ອາດສະພອນ", "ໄຊພູທອງ", "ພະລານໄຊ"],
+    "ສາລະວັນ": ["ສາລະວັນ", "ຕະໂອ້ຍ", "ຕຸ້ມລານ", "ລະຄອນເພັງ", "ວາປີ", "ຄົງເຊໂດນ", "ຜູ້ວຽງ", "ສະໝ້ວຍ"],
+    "ເຊກອງ": ["ລະມາມ", "ກະລຶມ", "ດາກຈຶງ", "ທ່າແຕງ"],
+    "ຈຳປາສັກ": ["ປາກເຊ", "ຊະນະສົມບູນ", "ບາຈຽງຈະເລີນສຸກ", "ປາກຊ່ອງ", "ປະທຸມພອນ", "ໂພນທອງ", "ຈຳປາສັກ", "ສຸຂຸມາ", "ມູນລະປະໂມກ", "ໂຂງ"],
+    "ອັດຕະປື": ["ໄຊເສດຖາ", "ສາມັກຄີໄຊ", "ສະໜາມໄຊ", "ຊານໄຊ", "ພູວົງ"],
+    "ໄຊສົມບູນ": ["ອະນຸວົງ", "ລ້ອງຊານ", "ລ້ອງແຈ້ງ", "ຮົ່ມ", "ທ່າໂທມ"]
+};
+
+function updateDistricts() {
+    const provinceSelect = document.getElementById("filterProvince");
+    const districtSelect = document.getElementById("filterDistrict");
+    const selectedProvince = provinceSelect.value;
+    
+    districtSelect.innerHTML = '<option value="">-- ທຸກເມືອງ --</option>';
+    
+    if (selectedProvince && districtData[selectedProvince]) {
+        const districts = districtData[selectedProvince];
+        districts.forEach(district => {
+            const option = document.createElement("option");
+            option.value = district;
+            option.textContent = district;
+            districtSelect.appendChild(option);
+        });
+    }
+    updateDashboardSchools();
+    renderAll();
+}
+function updateDashboardSchools() {
+    const districtSelect = document.getElementById("filterDistrict");
+    const schoolSelect = document.getElementById("filterSchool");
+    if(!schoolSelect) return;
+    
+    const selectedDistrict = districtSelect.value;
+    schoolSelect.innerHTML = '<option value="">-- ທຸກໂຮງຮຽນ --</option>';
+
+    if (selectedDistrict) {
+        const distKey = Object.keys(schoolHierarchy).find(k => k.includes(selectedDistrict));
+        if (distKey && schoolHierarchy[distKey]) {
+            schoolHierarchy[distKey].forEach(sch => {
+                const option = document.createElement("option");
+                option.value = sch;
+                option.textContent = sch;
+                schoolSelect.appendChild(option);
+            });
+        }
+    }
+    renderAll();
+}
+
+// ຟັງຊັນສຳລັບກັ່ນຕອງຄູອັດຕະໂນມັດ ຕາມທີ່ເລືອກໃນ Dashboard (ອັບເດດໃຫ້ກັ່ນຕອງຮອດລະດັບແຂວງ)
+function getFilteredTeachers() {
+    // 1. ຖ້າເລືອກໂຮງຮຽນ (ສະແດງສະເພາະໂຮງຮຽນນັ້ນ)
+    const filterSchool = document.getElementById("filterSchool")?.value;
+    if (filterSchool) {
+        return teachers.filter(t => t.school === filterSchool);
+    }
+    
+    // 2. ຖ້າເລືອກເມືອງ (ແຕ່ບໍ່ໄດ້ເລືອກໂຮງຮຽນ - ສະແດງທຸກໂຮງຮຽນໃນເມືອງນັ້ນ)
+    const filterDistrict = document.getElementById("filterDistrict")?.value;
+    if (filterDistrict) {
+        const distKey = Object.keys(schoolHierarchy).find(k => k.includes(filterDistrict));
+        if (distKey && schoolHierarchy[distKey]) {
+            const schoolsInDistrict = schoolHierarchy[distKey];
+            return teachers.filter(t => schoolsInDistrict.includes(t.school));
+        }
+        return []; 
+    }
+
+    // 3. ຖ້າເລືອກແຂວງ (ແຕ່ບໍ່ໄດ້ເລືອກເມືອງ ແລະ ໂຮງຮຽນ - ສະແດງທຸກເມືອງໃນແຂວງນັ້ນ)
+    const filterProvince = document.getElementById("filterProvince")?.value;
+    if (filterProvince) {
+        if (districtData[filterProvince]) {
+            let allSchoolsInProvince = [];
+            const districtsInProvince = districtData[filterProvince];
+            
+            // ວົນລູບດຶງເອົາໂຮງຮຽນທັງໝົດ ຈາກທຸກໆເມືອງທີ່ຢູ່ໃນແຂວງທີ່ເລືອກ
+            districtsInProvince.forEach(dist => {
+                const distKey = Object.keys(schoolHierarchy).find(k => k.includes(dist));
+                if (distKey && schoolHierarchy[distKey]) {
+                    allSchoolsInProvince = allSchoolsInProvince.concat(schoolHierarchy[distKey]);
+                }
+            });
+            
+            // ສົ່ງຄືນສະເພາະຄູທີ່ສັງກັດຢູ່ໃນໂຮງຮຽນຂອງແຂວງທີ່ເລືອກເທົ່ານັ້ນ
+            return teachers.filter(t => allSchoolsInProvince.includes(t.school));
+        }
+        return []; // ຖ້າແຂວງທີ່ເລືອກຍັງບໍ່ມີຂໍ້ມູນໂຮງຮຽນໃນລະບົບ
+    }
+    
+    // 4. ຖ້າບໍ່ໄດ້ເລືອກຫຍັງເລີຍ (ສະແດງທັງໝົດ)
+    return teachers;
+}
+/* ============================== INITIALIZE ============================== */
+document.addEventListener('DOMContentLoaded', () => {
+    initDistrictDropdown();
+    // ເອີ້ນໃຊ້ລະບົບກວດສອບສິດກ່ອນ ແລ້ວມັນຈະໄປເອີ້ນ renderAll() ໃຫ້ເອງໃນຕອນທ້າຍ
+    applyUserAccessControl(); 
+});
+
+/* ============================== NAVIGATION ============================== */
+const titles = {
+    dashboard: 'Dashboard',
+    subjects: 'ຂໍ້ມູນວິຊາສອນ',
+    teachers: 'ຂໍ້ມູນຄູ',
+    schedules: 'ຕາຕະລາງສອນ',
+    all_schedules: 'ຕາຕະລາງສອນລວມ',
+    reports: 'ລາຍງານຊົ່ວໂມງເກີນ',
+    summary: 'ສະຫຼຸບຕາມຊັ້ນຮຽນ', 
+    finance: 'ສະຫຼຸບເງິນຊົ່ວໂມງເກີນ',
+    settings: 'ຕັ້ງຄ່າ'
+};
+/* ============================== SUMMARY REPORT (NEW TABLE) ============================== */
+function renderSummaryReport() {
+    const tbody = document.getElementById('summaryTableExcel');
+    if (!tbody) return;
+
+    // 1. ດຶງຂໍ້ມູນຄູທີ່ຖືກກັ່ນຕອງຈາກ Dashboard
+    const currentTeachers = getFilteredTeachers();
+
+    if (!currentTeachers.length) {
+        tbody.innerHTML = `<tr><td colspan="15"><div class="empty">ບໍ່ພົບຂໍ້ມູນ (ກະລຸນາກວດເບິ່ງການເລືອກ ແຂວງ, ເມືອງ, ໂຮງຮຽນ)</div></td></tr>`;
+        return;
+    }
+
+    const monthInput = document.getElementById('summaryMonth');
+    if (!monthInput.value) {
+        const now = new Date();
+        monthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
+    const [year, month] = monthInput.value.split('-').map(Number);
+    
+    // --- ເພີ່ມລະຫັດອັບເດດສ່ວນຫົວເອກະສານຕອນພິມ ---
+    const filterDistrict = document.getElementById("filterDistrict")?.value;
+    const filterSchool = document.getElementById("filterSchool")?.value;
+    
+    const distEl1 = document.getElementById('printSummaryDistrict1');
+    const distEl2 = document.getElementById('printSummaryDistrict2');
+    const schoolEl = document.getElementById('printSummarySchool');
+    
+    if (distEl1) distEl1.textContent = filterDistrict ? `ເມືອງ ${filterDistrict}` : '...........................................';
+    if (distEl2) distEl2.textContent = filterDistrict ? filterDistrict : '......................';
+    if (schoolEl) schoolEl.textContent = filterSchool ? filterSchool : '.......................................................................';
+
+    let schoolYearStart = year;
+    let schoolYearEnd = year + 1;
+    
+    // ຖ້າເປັນເດືອນ 1 ຫາ 8 (ກ່ອນເດືອນ 9) ສະແດງວ່າເປັນພາກຮຽນທີ 2 ຂອງສົກຮຽນປີກາຍ
+    if (month < 9) {
+        schoolYearStart = year - 1;
+        schoolYearEnd = year;
+    }
+
+    const pMonth = document.getElementById('printSummaryMonth');
+    const pYear = document.getElementById('printSummaryYear');
+    const pSy1 = document.getElementById('printSummarySchoolYear1');
+    const pSy2 = document.getElementById('printSummarySchoolYear2');
+
+    if (pMonth) pMonth.textContent = month;
+    if (pYear) pYear.textContent = year;
+    if (pSy1) pSy1.textContent = schoolYearStart;
+    if (pSy2) pSy2.textContent = schoolYearEnd;
+    // --- ສິ້ນສຸດລະຫັດອັບເດດສ່ວນຫົວເອກະສານ ---
+
+    const holidaysList = ['07/10', '02/12', '01/01', '08/03', '14/04', '15/04', '16/04', '01/05'];
+    let holidayCounts = {1:0, 2:0, 3:0, 4:0, 5:0}; 
+    const daysInMonth = new Date(year, month, 0).getDate();
+    
+    for(let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month - 1, d);
+        const dayOfWeek = date.getDay();
+        if(dayOfWeek >= 1 && dayOfWeek <= 5) {
+            const dateString = `${String(d).padStart(2, '0')}/${String(month).padStart(2, '0')}`;
+            if(holidaysList.includes(dateString)) holidayCounts[dayOfWeek]++;
+        }
+    }
+
+// ແຍກຂໍ້ມູນຄູອອກເປັນກຸ່ມຕາມ "ໂຮງຮຽນ"
+    const groupedBySchool = {};
+    currentTeachers.forEach(t => {
+        const sch = t.school || 'ໂຮງຮຽນທີ່ບໍ່ໄດ້ລະບຸສັງກັດ';
+        if (!groupedBySchool[sch]) groupedBySchool[sch] = [];
+        groupedBySchool[sch].push(t);
+    });
+
+    let html = '';
+
+    // ວົນລູບສະແດງຜົນຕາມແຕ່ລະໂຮງຮຽນ
+    const schoolNames = Object.keys(groupedBySchool).sort();
+    
+    schoolNames.forEach((schoolName) => {
+        const teachersInSchool = groupedBySchool[schoolName];
+        let schoolHtml = '';
+        let displayIndex = 1; // ຣີເຊັດລຳດັບ 1 ໃໝ່ເມື່ອຂຶ້ນໂຮງຮຽນໃໝ່
+        let hasValidTeacherInSchool = false;
+
+        teachersInSchool.forEach((t) => {
+            const tSchedules = schedules.filter(s => s.teacherId === t.id);
+            if (tSchedules.length === 0) return; // ຖ້າບໍ່ມີຕາຕະລາງສອນ ໃຫ້ຂ້າມໄປ
+
+            // ຈັດກຸ່ມຂໍ້ມູນ (Group by Subject -> Grade)
+            let groups = {};
+            tSchedules.forEach(s => {
+                const subj = s.subject || '-';
+                const fullRoom = s.room || '-';
+                // ດຶງເອົາສະເພາະຊັ້ນ ຕົວຢ່າງ: ມ.1/1 ໃຫ້ເຫຼືອ ມ1
+                let gradeMatch = fullRoom.match(/ມ\.?\s*([1-7])/i);
+                let grade = gradeMatch ? `ມ${gradeMatch[1]}` : fullRoom;
+
+                if (!groups[subj]) groups[subj] = {};
+                if (!groups[subj][grade]) groups[subj][grade] = { count: 0, rooms: new Set() };
+
+                groups[subj][grade].count++;
+                groups[subj][grade].rooms.add(fullRoom);
+            });
+
+            // ປ່ຽນ Object ເປັນ Array ເພື່ອສ້າງແຖວຕາຕະລາງ
+            let rowData = [];
+            const sortedSubjects = Object.keys(groups).sort();
+            sortedSubjects.forEach(subj => {
+                const grades = Object.keys(groups[subj]).sort();
+                grades.forEach((grade, i) => {
+                    rowData.push({
+                        subject: subj,
+                        grade: grade,
+                        rooms: groups[subj][grade].rooms.size,
+                        totalHours: groups[subj][grade].count,
+                        hoursPerRoom: Math.round(groups[subj][grade].count / groups[subj][grade].rooms.size),
+                        isFirstOfSubject: i === 0,
+                        subjectRowspan: grades.length
+                    });
+                });
+            });
+
+            const totalRows = rowData.length || 1;
+            const totalWeek = tSchedules.length;
+            const required = t.requiredHours || 0;
+            let overWeek = totalWeek - required;
+            if (overWeek < 0) overWeek = 0;
+            const overMonth = overWeek * 4;
+
+            let holidayHoursMonth = 0;
+            tSchedules.forEach(s => { holidayHoursMonth += holidayCounts[s.day] * 1; });
+
+            let actualTotal = overMonth - holidayHoursMonth;
+            if (actualTotal < 0) actualTotal = 0;
+
+            if (actualTotal <= 0) {
+                return; 
+            }
+
+            hasValidTeacherInSchool = true;
+            const currentDisplayIndex = displayIndex++; 
+
+            // ສ້າງແຖວຕາຕະລາງແຕ່ລະແຖວ
+            rowData.forEach((r, i) => {
+                let tr = '<tr>';
+                
+                if (i === 0) {
+                    tr += `<td rowspan="${totalRows}">${currentDisplayIndex}</td>`;
+                    tr += `<td rowspan="${totalRows}" class="name-cell">${escapeHtml(t.name)}</td>`;
+                    tr += `<td rowspan="${totalRows}" style="white-space:nowrap;">${escapeHtml(t.position || '-')}</td>`;
+                }
+
+                tr += `<td>${escapeHtml(r.grade)}</td>`;
+                
+                if (r.isFirstOfSubject) {
+                    tr += `<td rowspan="${r.subjectRowspan}" style="text-align:left;">${escapeHtml(r.subject)}</td>`;
+                }
+
+                tr += `<td>${r.hoursPerRoom}</td>`;
+                tr += `<td>${r.rooms}</td>`;
+                tr += `<td style="font-weight:bold;">${r.totalHours}</td>`;
+
+                if (i === 0) {
+                    tr += `<td rowspan="${totalRows}" style="font-weight:bold;">${totalWeek}</td>`;
+                    tr += `<td rowspan="${totalRows}">${required}</td>`;
+                    tr += `<td rowspan="${totalRows}" style="color:var(--red); font-weight:bold;">${overWeek > 0 ? overWeek : ''}</td>`;
+                    tr += `<td rowspan="${totalRows}" style="color:var(--primary); font-weight:bold;">${overMonth > 0 ? overMonth : ''}</td>`;
+                    tr += `<td rowspan="${totalRows}" style="color:#d97706; font-weight:bold;">${holidayHoursMonth > 0 ? holidayHoursMonth : ''}</td>`;
+                    tr += `<td rowspan="${totalRows}" style="color:var(--green); font-weight:bold;">${actualTotal > 0 ? actualTotal : ''}</td>`;
+                    tr += `<td rowspan="${totalRows}"></td>`; 
+                }
+                tr += '</tr>';
+                schoolHtml += tr;
+            });
+        });
+
+        // ຖ້າມີຄູທີ່ໄດ້ຊົ່ວໂມງເກີນໃນໂຮງຮຽນນີ້ ໃຫ້ເພີ່ມຫົວຂໍ້ຊື່ໂຮງຮຽນຂັ້ນໄວ້ທາງເທິງ (colspan=15)
+        if (hasValidTeacherInSchool) {
+            html += `
+            <tr style="background:#f1f5f9; font-weight:bold;">
+                <td colspan="15" style="text-align:left; color:var(--primary); padding-left:15px; border-bottom: 2px solid var(--primary);">
+                    🏫 ໂຮງຮຽນ: ${escapeHtml(schoolName)}
+                </td>
+            </tr>`;
+            html += schoolHtml;
+        }
+    });
+
+    // ========================================== // ຈຸດທີ່ແກ້ໄຂ 2: ກວດສອບກໍລະນີບໍ່ມີຂໍ້ມູນ // ==========================================
+    if (html === '') {
+        tbody.innerHTML = `<tr><td colspan="15"><div class="empty">ບໍ່ມີຄູທີ່ໄດ້ຊົ່ວໂມງເກີນໃນໂຮງຮຽນ/ເດືອນນີ້</div></td></tr>`;
+    } else {
+        tbody.innerHTML = html;
+    }
+}
+// ... (ຂ້າມມາບ່ອນບັນທຶກ)
+function saveData() {
+    localStorage.setItem('teachers', JSON.stringify(teachers));
+    localStorage.setItem('subjects', JSON.stringify(subjects));
+    
+    // ບັນທຶກຕາຕະລາງລົງໃນ "ເວີຊັ່ນປັດຈຸບັນ" ທີ່ເລືອກຢູ່
+    let versionIndex = scheduleVersions.findIndex(v => v.id === activeVersionId);
+    if (versionIndex > -1) {
+        scheduleVersions[versionIndex].data = [...schedules];
+    }
+    localStorage.setItem('scheduleVersions', JSON.stringify(scheduleVersions));
+    
+    // ສຳຮອງໄວ້ໃນ key ເກົ່າເພື່ອຄວາມປອດໄພ
+    localStorage.setItem('schedules', JSON.stringify(schedules)); 
+}
+function showView(view, button) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById('view-' + view).classList.add('active');
+    document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+    if (button) button.classList.add('active');
+    document.getElementById('pageTitle').textContent = titles[view] || '';
+    renderAll();
+    document.getElementById('sidebar').classList.remove('open');
+}
+
+function showViewById(view) {
+    const btn = [...document.querySelectorAll('.menu button')].find(b => b.getAttribute('onclick')?.includes(`'${view}'`));
+    showView(view, btn);
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+/* ============================== STORAGE & UTILS ============================== */
+function saveData() {
+    localStorage.setItem('teachers', JSON.stringify(teachers));
+    localStorage.setItem('subjects', JSON.stringify(subjects));
+    
+    // ບັນທຶກຕາຕະລາງລົງໃນ "ເວີຊັ່ນປັດຈຸບັນ" ທີ່ເລືອກຢູ່
+    let versionIndex = scheduleVersions.findIndex(v => v.id === activeVersionId);
+    if (versionIndex > -1) {
+        scheduleVersions[versionIndex].data = [...schedules];
+    }
+    localStorage.setItem('scheduleVersions', JSON.stringify(scheduleVersions));
+    
+    // ສຳຮອງໄວ້ໃນ key ເກົ່າເພື່ອຄວາມປອດໄພ
+    localStorage.setItem('schedules', JSON.stringify(schedules)); 
+}
+
+function money(val) { return Number(val || 0).toLocaleString('lo-LA') + ' ກີບ'; }
+function escapeHtml(text) {
+    return String(text ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// --- ເພີ່ມໂຄດໃໝ່ (ວາງໄວ້ກ່ອນພາກສ່ວນ TEACHERS) ---
+// ຖານຂໍ້ມູນ ຊັ້ນ, ຂັ້ນ ແລະ ດັດສະນີ ສຳລັບຄຳນວນອັດຕະໂນມັດ
+const indexLookup = {
+    "1": { 1:260, 2:261, 3:262, 4:263, 5:264, 6:265, 7:266, 8:267, 9:268, 10:269, 11:270, 12:271, 13:272, 14:273, 15:274 },
+    "2": { 1:268, 2:269, 3:270, 4:271, 5:272, 6:273, 7:274, 8:275, 9:276, 10:277, 11:278, 12:279, 13:280, 14:281, 15:282 },
+    "3": { 1:276, 2:277, 3:278, 4:279, 5:280, 6:281, 7:282, 8:284, 9:286, 10:288, 11:290, 12:292, 13:294, 14:296, 15:298 },
+    "4": { 1:286, 2:288, 3:290, 4:292, 5:294, 6:296, 7:298, 8:303, 9:308, 10:313, 11:318, 12:323, 13:328, 14:333, 15:338 },
+    "5": { 1:308, 2:313, 3:318, 4:323, 5:328, 6:333, 7:338, 8:348, 9:358, 10:368, 11:378, 12:388, 13:398, 14:408, 15:418 },
+    "6": { 1:600, 2:700, 3:800, 4:900, 5:1000, 6:1100, 7:1200 }
+};
+
+// ຟັງຊັນສຳລັບໃສ່ຈຸດຂັ້ນຫຼັກພັນໃນຊ່ອງ Input ອັດຕະໂນມັດ
+function formatCurrencyInput(input) {
+    let val = input.value.replace(/,/g, ''); // ເອົາຈຸດອອກກ່ອນ
+    if (val !== '' && !isNaN(val)) {
+        input.value = Number(val).toLocaleString('en-US'); // ໃສ່ຈຸດຄືນ
+    } else {
+        input.value = val.replace(/[^0-9]/g, ''); // ຖ້າພິມໂຕໜັງສືໃຫ້ລຶບອອກ
+    }
+}
+
+// ຟັງຊັນຄຳນວນເງິນເດືອນອັດຕະໂນມັດ
+function calculateSalary(mode) {
+    const level = document.getElementById('teacherLevel').value;
+    const step = document.getElementById('teacherStep').value;
+    const indexInput = document.getElementById('teacherIndex');
+    const indexValueInput = document.getElementById('teacherIndexValue');
+    const salaryInput = document.getElementById('teacherSalary');
+    
+    // ຖ້າເລືອກ ຊັ້ນ ແລະ ຂັ້ນ ໃຫ້ດຶງຄ່າດັດສະນີມາໃສ່ອັດຕະໂນມັດ
+    if (mode === 'auto' && level && step && indexLookup[level] && indexLookup[level][step]) {
+        indexInput.value = indexLookup[level][step];
+    }
+
+    const index = Number(indexInput.value) || 0;
+    // ປ່ຽນຄ່າທີ່ມີຈຸດ(comma) ໃຫ້ເປັນຕົວເລກທຳມະດາກ່ອນຄຳນວນ
+    const indexValue = Number(indexValueInput.value.replace(/,/g, '')) || 0;
+    
+    // ຄຳນວນເງິນເດືອນພື້ນຖານ ແລະ ໃສ່ຈຸດ (,) ຄືນ
+    const totalSalary = index * indexValue;
+    salaryInput.value = totalSalary.toLocaleString('en-US');
+}
+// --- ສິ້ນສຸດໂຄດໃໝ່ ---
+
+/* ============================== TEACHERS ============================== */
+// ເກັບຂໍ້ມູນຕຳແໜ່ງ/ຮັບຜິດຊອບ ແລະ ຊົ່ວໂມງທີ່ກຳນົດຕາມເງື່ອນໄຂ
+const positionHoursMap = {
+    "ຜອ": 6,
+    "ຮອງ ຜອ": 10,
+    "ສຶກສານິເທດ": 8,
+    "4 ຊັ້ນ ຫຼື 3 ວິຊາ": 12,
+    "ຄູ ມ.ຕົ້ນ": 18,
+    "ຄູ ມ.ປາຍ": 16,
+    "ຄູ ມ.ຕົ້ນ-ປາຍ": 17
+};
+
+// ຟັງຊັນດຶງຄ່າຊົ່ວໂມງອັດຕະໂນມັດເມື່ອເລືອກຕຳແໜ່ງ/ຮັບຜິດຊອບ
+function autoFillRequiredHours() {
+    const pos = document.getElementById('teacherPosition').value;
+    const reqInput = document.getElementById('teacherRequired');
+    if (positionHoursMap[pos] !== undefined) {
+        reqInput.value = positionHoursMap[pos];
+    }
+}
+
+async function openTeacherModal() {
+    const filterProvince = document.getElementById("filterProvince").value;
+    const filterDistrict = document.getElementById("filterDistrict").value;
+    const filterSchool = document.getElementById("filterSchool").value;
+
+    if (!filterProvince || !filterDistrict || !filterSchool) {
+        await sysAlert('ກະລຸນາເລືອກ ແຂວງ, ເມືອງ ແລະ ໂຮງຮຽນ ໃນໜ້າ Dashboard ໃຫ້ຄົບກ່ອນຈຶ່ງສາມາດເພີ່ມຂໍ້ມູນຄູໄດ້');
+        showViewById('dashboard');
+        return;
+    }
+
+    document.getElementById('editTeacherId').value = '';
+    document.getElementById('teacherModalTitle').textContent = 'ເພີ່ມຂໍ້ມູນຄູ';
+    document.getElementById('teacherName').value = '';
+    document.getElementById('teacherPosition').value = '';
+    document.getElementById('teacherRequired').value = '14';
+    document.getElementById('teacherLevel').value = '';
+    document.getElementById('teacherStep').value = '';
+    document.getElementById('teacherIndex').value = '';
+    document.getElementById('teacherIndexValue').value = '9,500';
+    document.getElementById('teacherSalary').value = '';
+    document.getElementById('teacherModal').classList.add('show');
+}
+
+function editTeacher(id) {
+    const t = teachers.find(x => x.id === id);
+    if (!t) return;
+    document.getElementById('editTeacherId').value = t.id;
+    document.getElementById('teacherModalTitle').textContent = 'ແກ້ໄຂຂໍ້ມູນຄູ';
+    document.getElementById('teacherName').value = t.name;
+    document.getElementById('teacherPosition').value = t.position || '';
+    document.getElementById('teacherRequired').value = t.requiredHours || 14;
+    document.getElementById('teacherLevel').value = t.level || '';
+    document.getElementById('teacherStep').value = t.step || '';
+    document.getElementById('teacherIndex').value = t.index || '';
+    document.getElementById('teacherIndexValue').value = (t.indexValue || 9500).toLocaleString('en-US');
+    document.getElementById('teacherSalary').value = (t.salary || 0).toLocaleString('en-US');
+    document.getElementById('teacherModal').classList.add('show');
+}
+
+/* [ໂຄດໃໝ່ທີ່ຈະແທນທັບ] */
+async function saveTeacher() {
+    const name = document.getElementById('teacherName').value.trim();
+    const required = Number(document.getElementById('teacherRequired').value) || 0;
+    const salary = Number(document.getElementById('teacherSalary').value.replace(/,/g, '')) || 0;
+
+    if (!name) { await sysAlert('ກະລຸນາໃສ່ຊື່ຄູ'); return; }
+    
+    const filterSchool = document.getElementById("filterSchool").value;
+    const editId = document.getElementById('editTeacherId').value;
+    
+    let saveSchool = filterSchool;
+    if (editId) {
+        // ຖ້າເປັນການແກ້ໄຂ ແລ້ວໜ້າຈໍ Dashboard ບໍ່ໄດ້ເລືອກໂຮງຮຽນຢູ່ ໃຫ້ໃຊ້ໂຮງຮຽນເກົ່າ
+        const oldTeacher = teachers.find(t => t.id === editId);
+        if (oldTeacher && !saveSchool) saveSchool = oldTeacher.school;
+    }
+
+    const data = {
+        name,
+        position: document.getElementById('teacherPosition').value.trim(),
+        school: saveSchool,
+        requiredHours: required,
+        level: document.getElementById('teacherLevel').value.trim(),
+        step: document.getElementById('teacherStep').value.trim(),
+        index: document.getElementById('teacherIndex').value.trim(),
+        indexValue: Number(document.getElementById('teacherIndexValue').value.replace(/,/g, '')) || 9500,
+        salary
+    };
+
+    if (editId) {
+        const index = teachers.findIndex(x => x.id === editId);
+        if (index > -1) teachers[index] = { ...teachers[index], ...data };
+    } else {
+        teachers.push({ id: Date.now().toString(), ...data });
+    }
+    saveData();
+    closeModal('teacherModal');
+    renderAll();
+}
+
+async function deleteTeacher(id) {
+    const isConfirm = await sysConfirm('ຕ້ອງການລຶບຂໍ້ມູນຄູນີ້ບໍ?');
+    if (!isConfirm) return;
+    teachers = teachers.filter(t => t.id !== id);
+    // ຄວນລຶບຕາຕະລາງສອນຂອງຄູຄົນນີ້ອອກນຳ
+    schedules = schedules.filter(s => s.teacherId !== id);
+    saveData();
+    renderAll();
+}
+
+function renderTeachers() {
+    const tbody = document.getElementById('teacherTable');
+    const search = (document.getElementById('teacherSearch')?.value || '').toLowerCase();
+    
+    const currentTeachers = getFilteredTeachers();
+    const list = currentTeachers.filter(t => t.name.toLowerCase().includes(search));
+
+if (!list.length) {
+        // ປ່ຽນ colspan ຈາກ 7 ເປັນ 12 ເພື່ອໃຫ້ກວມເອົາທຸກຄໍລຳໃໝ່
+        tbody.innerHTML = `<tr><td colspan="12"><div class="empty">ບໍ່ພົບຂໍ້ມູນຄູ (ກະລຸນາກວດເບິ່ງການເລືອກ ແຂວງ, ເມືອງ, ໂຮງຮຽນ)</div></td></tr>`;
+        
+        // ຖ້າບໍ່ມີຂໍ້ມູນ ໃຫ້ເອົາເຄື່ອງໝາຍຕິກອອກຈາກປຸ່ມເລືອກທັງໝົດ ແລະ ເຊື່ອງປຸ່ມລຶບ
+        const selectAll = document.getElementById('selectAllTeachers');
+        if (selectAll) selectAll.checked = false;
+        toggleDeleteButtonVisibility();
+        
+        return;
+    }
+    
+    tbody.innerHTML = list.map((t, i) => `
+        <tr>
+            <td style="text-align: center;">
+                <input type="checkbox" class="teacher-checkbox" value="${t.id}" onchange="toggleDeleteButtonVisibility()">
+            </td>
+            <td>${i + 1}</td>
+            <td><b>${escapeHtml(t.name)}</b></td>
+            <td>${escapeHtml(t.school || '-')}</td>
+            <td>${escapeHtml(t.position || '-')}</td>
+            <td style="text-align: center;">${escapeHtml(t.level || '-')}</td>
+            <td style="text-align: center;">${escapeHtml(t.step || '-')}</td>
+            <td style="text-align: center;">${escapeHtml(t.index || '-')}</td>
+            <td style="text-align: right;">${t.indexValue ? Number(t.indexValue).toLocaleString('en-US') : '-'}</td>
+            <td class="money" style="text-align: right;">${money(t.salary)}</td>
+            <td style="text-align: center;"><span class="badge badge-blue">${t.requiredHours || 0} ຊ.ມ</span></td>
+            <td style="text-align: center;">
+                <button class="btn btn-blue" onclick="editTeacher('${t.id}')">✏️</button>
+            </td>
+        </tr>
+    `).join('');
+}
+// ຟັງຊັນຕິກເລືອກທັງໝົດ
+function toggleAllTeacherCheckboxes(source) {
+    const checkboxes = document.querySelectorAll('.teacher-checkbox');
+    checkboxes.forEach(cb => {
+        cb.checked = source.checked;
+    });
+    toggleDeleteButtonVisibility();
+}
+
+// ຟັງຊັນເຊື່ອງ/ສະແດງ ປຸ່ມ "ລຶບຂໍ້ມູນ" ຖ້າມີການຕິກ Checkbox ຢ່າງນ້ອຍ 1 ອັນ
+function toggleDeleteButtonVisibility() {
+    const checkboxes = document.querySelectorAll('.teacher-checkbox:checked');
+    const btn = document.getElementById('btnDeleteSelectedTeachers');
+    
+    // ຖ້າຕິກໃຫ້ສະແດງປຸ່ມ, ຖ້າບໍ່ໄດ້ຕິກຈັກອັນໃຫ້ເຊື່ອງປຸ່ມ
+    if (btn) {
+        btn.style.display = checkboxes.length > 0 ? 'inline-block' : 'none';
+    }
+    
+    // ອັບເດດສະຖານະ Checkbox ໂຕຫຼັກ
+    const allCheckboxes = document.querySelectorAll('.teacher-checkbox');
+    const selectAll = document.getElementById('selectAllTeachers');
+    if (selectAll && allCheckboxes.length > 0) {
+        selectAll.checked = checkboxes.length === allCheckboxes.length;
+    }
+}
+
+// ຟັງຊັນຢືນຢັນ ແລະ ລຶບຂໍ້ມູນທີ່ເລືອກ
+async function deleteSelectedTeachers() {
+    const checkboxes = document.querySelectorAll('.teacher-checkbox:checked');
+    if (checkboxes.length === 0) return;
+    
+    const isConfirm = await sysConfirm(`ຕ້ອງການລຶບຂໍ້ມູນຄູທີ່ເລືອກໄວ້ຈຳນວນ ${checkboxes.length} ທ່ານ ແທ້ບໍ?`);
+    if (!isConfirm) return;
+
+    // ເອົາ ID ຂອງຄູທີ່ຖືກຕິກທັງໝົດ
+    const idsToDelete = Array.from(checkboxes).map(cb => cb.value);
+    
+    // ລຶບຄູອອກຈາກ Array ຫຼັກ
+    teachers = teachers.filter(t => !idsToDelete.includes(t.id));
+    // ຢ່າລືມລຶບຕາຕະລາງສອນຂອງຄູເຫຼົ່ານັ້ນອອກນຳ
+    schedules = schedules.filter(s => !idsToDelete.includes(s.teacherId));
+    
+    saveData();
+    
+    // ເຄຍການຕິກອອກທັງໝົດແລ້ວລີເຟຣຊໜ້າຈໍ
+    const selectAll = document.getElementById('selectAllTeachers');
+    if (selectAll) selectAll.checked = false;
+    toggleDeleteButtonVisibility();
+    
+    renderAll();
+}
+async function openExcelImportModal() {
+    const filterSchool = document.getElementById("filterSchool").value;
+    if (!filterSchool) {
+        await sysAlert('ກະລຸນາເລືອກ "ໂຮງຮຽນ" ໃນໜ້າ Dashboard ກ່ອນ ເພື່ອໃຫ້ລະບົບຮູ້ວ່າຈະເພີ່ມລາຍຊື່ຄູໃສ່ໂຮງຮຽນໃດ!');
+        showViewById('dashboard');
+        return;
+    }
+    document.getElementById('excelPasteArea').value = '';
+    document.getElementById('excelImportModal').classList.add('show');
+}
+
+async function processExcelPaste() {
+    const rawData = document.getElementById('excelPasteArea').value.trim();
+    if (!rawData) {
+        await sysAlert('ກະລຸນາວາງຂໍ້ມູນ (Paste) ຈາກ Excel ກ່ອນກົດບັນທຶກ');
+        return;
+    }
+
+    const filterSchool = document.getElementById("filterSchool").value;
+    const rows = rawData.split('\n'); // ແຍກຂໍ້ມູນອອກເປັນແຖວ
+    let addedCount = 0;
+
+    rows.forEach(row => {
+        // ແຍກຂໍ້ມູນແຕ່ລະແຖວອອກເປັນຖັນ ດ້ວຍ Tab (\t) ທີ່ໄດ້ມາຈາກການກ໋ອບປີ້ Excel
+        const cols = row.split('\t').map(c => c.trim());
+        
+        // ກວດສອບວ່າຖັນທຳອິດ (ຊື່) ບໍ່ວ່າງເປົ່າ
+        if (cols.length > 0 && cols[0] !== '') {
+            const name = cols[0];
+            const position = cols[1] || '';
+            const level = cols[2] || '';
+            const step = cols[3] || '';
+            
+            // ດັດສະນີ
+            const indexVal = Number(cols[4]) || 0;
+            
+            // ມູນຄ່າດັດສະນີ (ຖ້າໃນ Excel ປະຫວ່າງໄວ້ ໃຫ້ຕັ້ງມາດຕະຖານເປັນ 9500)
+            let indexValueCost = 9500;
+            if (cols[5]) {
+                indexValueCost = Number(cols[5].replace(/,/g, '')) || 9500;
+            }
+            
+            // ຄຳນວນເງິນເດືອນ
+            const salary = indexVal * indexValueCost;
+
+            // ຊ.ມ ກຳນົດ (ຖ້າໃນ Excel ບໍ່ມີ ໃຫ້ດຶງສູດຈາກຕຳແໜ່ງ, ຖ້າບໍ່ມີອີກໃຫ້ເປັນ 14)
+            let required = Number(cols[6]);
+            if (!cols[6] || isNaN(required)) {
+                required = positionHoursMap[position] !== undefined ? positionHoursMap[position] : 14;
+            }
+
+            // ບັນທຶກເຂົ້າເປັນ Object ໃໝ່
+            const newTeacher = {
+                id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+                name: name,
+                position: position,
+                school: filterSchool,
+                requiredHours: required,
+                level: level,
+                step: step,
+                index: indexVal || '',
+                indexValue: indexValueCost,
+                salary: salary
+            };
+
+            teachers.push(newTeacher);
+            addedCount++;
+        }
+    });
+
+    saveData();
+    closeModal('excelImportModal');
+    renderAll();
+    await sysAlert(`ນຳເຂົ້າຂໍ້ມູນຄູສຳເລັດແລ້ວ ຈຳນວນ ${addedCount} ທ່ານ!`);
+}
+/* ============================== SCHEDULES ============================== */
+async function openScheduleModal() {
+    const filterProvince = document.getElementById("filterProvince").value;
+    const filterDistrict = document.getElementById("filterDistrict").value;
+    const filterSchool = document.getElementById("filterSchool").value;
+
+    if (!filterProvince || !filterDistrict || !filterSchool) {
+        await sysAlert('ກະລຸນາເລືອກ ແຂວງ, ເມືອງ ແລະ ໂຮງຮຽນ ໃນໜ້າ Dashboard ໃຫ້ຄົບກ່ອນຈຶ່ງສາມາດບັນທຶກຕາຕະລາງໄດ້');
+        showViewById('dashboard');
+        return;
+    }
+
+    if (!teachers.length) {
+        await sysAlert('ກະລຸນາເພີ່ມຂໍ້ມູນຄູກ່ອນ');
+        showViewById('teachers');
+        return;
+    }
+
+    // ປ້ອນຂໍ້ມູນລົງໃນຊ່ອງເລືອກໂຮງຮຽນອັດຕະໂນມັດ ແລະ ລັອກໄວ້
+    const schoolSelect = document.getElementById('scheduleSchool');
+    schoolSelect.innerHTML = `<option value="${filterSchool}">${escapeHtml(filterSchool)}</option>`;
+    schoolSelect.value = filterSchool;
+    schoolSelect.disabled = true; 
+    
+    filterTeachersBySchool(); // ໂຫຼດລາຍຊື່ຄູຕາມໂຮງຮຽນອັດຕະໂນມັດ
+    
+    document.getElementById('editScheduleId').value = '';
+    document.getElementById('scheduleSubject').value = '';
+    document.getElementById('scheduleRoom').value = '';
+    document.getElementById('scheduleDay').value = '1';
+    
+    updatePeriodCheckboxes(); 
+    document.getElementById('scheduleModal').classList.add('show');
+}
+
+// ຟັງຊັນໃໝ່: ກັ່ນຕອງຄູຕາມໂຮງຮຽນທີ່ເລືອກ
+function filterTeachersBySchool() {
+    const school = document.getElementById('scheduleSchool').value;
+    const select = document.getElementById('scheduleTeacher');
+    
+    if (!school) {
+        select.innerHTML = `<option value="">-- ກະລຸນາເລືອກໂຮງຮຽນກ່ອນ --</option>`;
+    } else {
+        // ກັ່ນຕອງເອົາສະເພາະຄູທີ່ສັງກັດໂຮງຮຽນທີ່ເລືອກ
+        const filteredTeachers = teachers.filter(t => t.school === school);
+        
+        if (filteredTeachers.length === 0) {
+            select.innerHTML = `<option value="">-- ບໍ່ພົບລາຍຊື່ຄູໃນໂຮງຮຽນນີ້ --</option>`;
+        } else {
+            select.innerHTML = `<option value="">-- ເລືອກຄູ --</option>` + 
+                filteredTeachers.map(t => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+        }
+    }
+    // ອັບເດດ Checkbox ໃໝ່ເພາະມີການປ່ຽນແປງຄູ
+    updatePeriodCheckboxes(); 
+}
+
+// ຟັງຊັນອັບເດດສະຖານະ Checkbox ຕາມຂໍ້ມູນທີ່ມີຢູ່ແລ້ວ
+function updatePeriodCheckboxes() {
+    const teacherId = document.getElementById('scheduleTeacher').value;
+    const day = Number(document.getElementById('scheduleDay').value);
+    const checkboxes = document.querySelectorAll('input[name="schedulePeriods"]');
+    
+    checkboxes.forEach(cb => {
+        const period = Number(cb.value);
+        
+        // ໃຫ້ກວດສອບວ່າ "ຄູຄົນນີ້" ມີສອນໃນຊົ່ວໂມງນີ້ແລ້ວຫຼືยัง (ປ້ອງກັນບໍ່ໃຫ້ຄູຄົນດຽວກັນຖືກຈັດຊ້ຳເວລາໃນມື້ດຽວກัน)
+        const existing = schedules.find(s => s.teacherId === teacherId && s.day === day && s.period === period);
+        
+        const label = cb.parentElement;
+        let infoSpan = label.querySelector('.booked-info');
+        if(!infoSpan) {
+            infoSpan = document.createElement('span');
+            infoSpan.className = 'booked-info';
+            infoSpan.style.color = '#dc2626';
+            infoSpan.style.fontSize = '11px';
+            infoSpan.style.marginLeft = '5px';
+            label.appendChild(infoSpan);
+        }
+        
+        if(existing) {
+            cb.checked = true;
+            cb.disabled = true;
+            infoSpan.textContent = `(${existing.room || existing.subject || 'ມີສອນແລ້ວ'})`;
+        } else {
+            cb.checked = false;
+            cb.disabled = false;
+            infoSpan.textContent = '';
+        }
+    });
+}
+
+// ດັກຈັບເຫດການເມື່ອມີການປ່ຽນແປງ ຄູ ຫຼື ວັນສອນ ໃຫ້ອັບເດດ Checkbox ອັດຕະໂນມັດ
+document.getElementById('scheduleTeacher').addEventListener('change', updatePeriodCheckboxes);
+document.getElementById('scheduleDay').addEventListener('change', updatePeriodCheckboxes);
+
+// ຟັງຊັນສຳລັບປຸ່ມ "+ ເພີ່ມວິຊາ ແລະ ຫ້ອງສອນ" (ບັນທຶກແລ້ວບໍ່ປິດໜ້າຕ່າງ)
+async function addSubSchedule() {
+    const teacherId = document.getElementById('scheduleTeacher').value;
+    const day = document.getElementById('scheduleDay').value;
+    const periodCheckboxes = document.querySelectorAll('input[name="schedulePeriods"]:checked:not(:disabled)');
+    
+    if (!teacherId) { await sysAlert('ກະລຸນາເລືອກຄູ'); return; }
+    if (periodCheckboxes.length === 0) { 
+        await sysAlert('ກະລຸນາຕິກເລືອກຊົ່ວໂມງສອນກ່ອນກົດເພີ່ມ'); 
+        return; 
+    }
+
+    const subject = document.getElementById('scheduleSubject').value.trim();
+    const room = document.getElementById('scheduleRoom').value.trim();
+
+// === ປັບປຸງໃໝ່: ກວດສອບການຊ້ຳຊ້ອນສະເພາະ "ພາຍໃນໂຮງຮຽນດຽວກັນ" ເທົ່ານັ້ນ ===
+    const currentSchool = document.getElementById('scheduleSchool').value;
+    
+    if (room !== '') {
+        let conflicts = [];
+        for (let cb of periodCheckboxes) {
+            const period = Number(cb.value);
+            
+            // ຄົ້ນຫາຕາຕະລາງທີ່ມີຢູ່ແລ້ວ ໂດຍກວດສອບທັງ ຫ້ອງ, ວັນ, ຊົ່ວໂມງ ແລະ ຕ້ອງຢູ່ "ໂຮງຮຽນດຽວກັນ"
+            const conflict = schedules.find(s => {
+                const sTeacher = teachers.find(t => t.id === s.teacherId);
+                return s.room === room && 
+                       s.day === Number(day) && 
+                       s.period === period &&
+                       sTeacher && sTeacher.school === currentSchool;
+            });
+            
+            if (conflict) {
+                const tName = teachers.find(t => t.id === conflict.teacherId)?.name || 'ຄູທ່ານອື່ນ';
+                conflicts.push(`ຊ.ມ ທີ ${period} (${tName} ສອນວິຊາ ${conflict.subject || 'ບໍ່ລະບຸ'})`);
+            }
+        }
+        
+        if (conflicts.length > 0) {
+            await sysAlert(`ບໍ່ສາມາດບັນທຶກໄດ້!\nຫ້ອງ ${room} ໂຮງຮຽນນີ້ ໃນ${dayNames[Number(day)]} มีການສອນຢູ່ແລ້ວໃນ:\n\n- ${conflicts.join('\n- ')}`);
+            return;
+        }
+    }
+    // ==============================================================
+
+    periodCheckboxes.forEach((cb) => {
+        const period = Number(cb.value);
+        const record = {
+            id: Date.now().toString() + '-' + period, 
+            teacherId,
+            subject,
+            room,
+            day: Number(day),
+            period
+        };
+        schedules.push(record);
+    });
+
+    saveData();
+    renderAll();
+    
+    // ລຶບຂໍ້ມູນຊ່ອງວິຊາ/ຫ້ອງ ແຕ່ຍັງເປີດໜ້າຕ່າງໄວ້
+    document.getElementById('scheduleSubject').value = '';
+    document.getElementById('scheduleRoom').value = '';
+    updatePeriodCheckboxes(); 
+}
+
+// ຟັງຊັນສຳລັບປຸ່ມ "ບັນທຶກ" ສີຂຽວຢູ່ລຸ່ມສຸດ (ສຳເລັດ ແລະ ປິດໜ້າຕ່າງ)
+function saveSchedule() {
+    // ກວດເບິ່ງວ່າມີການຕິກຊົ່ວໂມງຄ້າງໄວ້ ແຕ່ຍັງບໍ່ໄດ້ກົດປຸ່ມເພີ່ມ ຫຼື ບໍ່
+    const periodCheckboxes = document.querySelectorAll('input[name="schedulePeriods"]:checked:not(:disabled)');
+    
+    if (periodCheckboxes.length > 0) {
+        // ຖ້າມີຄ້າງໄວ້ ກໍໃຫ້ບັນທຶກເຂົ້າໄປພ້ອມເລີຍກ່ອນປິດ
+        addSubSchedule(); 
+    }
+    
+    // ປິດໜ້າຕ່າງເມື່ອສຳເລັດ
+    closeModal('scheduleModal');
+}
+
+async function deleteSchedule(id) {
+    const isConfirm = await sysConfirm('ຕ້ອງການລຶບລາຍການນີ້ແທ້ບໍ?');
+    if (!isConfirm) return;
+    schedules = schedules.filter(s => s.id !== id);
+    saveData();
+    renderAll();
+}
+
+const dayNames = {1:'ວັນຈັນ', 2:'ວັນອັງຄານ', 3:'ວັນພຸດ', 4:'ວັນພະຫັດ', 5:'ວັນສຸກ'};
+
+/* ============================== AUTO GENERATE SCHEDULES (ອັບເດດໃໝ່) ============================== */
+async function generateDetailedSchedules() {
+    try {
+        const filterSchool = document.getElementById("filterSchool")?.value;
+        if (!filterSchool) {
+            await sysAlert('ກະລຸນາເລືອກ "ໂຮງຮຽນ" ໃນໜ້າ Dashboard ກ່ອນ ເພື່ອສ້າງຕາຕະລາງໃຫ້ໂຮງຮຽນນີ້!');
+            showViewById('dashboard');
+            return;
+        }
+
+        const isConfirm = await sysConfirm('ຕ້ອງການບັນທຶກ ແລະ ສ້າງຕາຕະລາງລາຍວັນ ອີງຕາມຂໍ້ມູນທີ່ປ້ອນນີ້ແທ້ບໍ?\n(ຕາຕະລາງເກົ່າຂອງໂຮງຮຽນນີ້ຈະຖືກລຶບ ແລະ ສ້າງໃໝ່ຕາມນີ້)');
+        if (!isConfirm) return;
+
+        const currentTeachersIds = getFilteredTeachers().map(t => t.id);
+        if (currentTeachersIds.length === 0) {
+            await sysAlert('ບໍ່ພົບຂໍ້ມູນຄູໃນໂຮງຮຽນນີ້! (ກະລຸນາເພີ່ມຄູກ່ອນ)');
+            return;
+        }
+        
+        const currentSchoolAssigns = assignments[filterSchool] || {};
+        let hasAssignments = false;
+        
+        // ກວດສອບວ່າມີການປ້ອນຄູ ແລະ ຈຳນວນຫ້ອງແທ້ ຫຼື ບໍ່
+        Object.keys(currentSchoolAssigns).forEach(key => {
+            if (currentSchoolAssigns[key].teacherId && currentSchoolAssigns[key].rooms > 0) {
+                hasAssignments = true;
+            }
+        });
+
+        if (!hasAssignments) {
+            await sysAlert('ຍັງບໍ່ມີການເລືອກຄູສອນ ແລະ ຈຳນວນຫ້ອງ ໃນຕາຕະລາງເທື່ອ! (ກະລຸນາປ້ອນຂໍ້ມູນກ່ອນ)');
+            return;
+        }
+
+        // ລຶບຕາຕະລາງເກົ່າສະເພາະໂຮງຮຽນນີ້ອອກ
+        schedules = schedules.filter(s => !currentTeachersIds.includes(s.teacherId));
+
+    const roomTimetable = {};
+        const teacherTimetable = {};
+
+        // ໂຫຼດຕາຕະລາງເກົ່າຂອງຄູ/ຫ້ອງ ເພື່ອກັນການຊ້ຳຊ້ອນ (ແຍກຕາມໂຮງຮຽນເດັດຂາດ)
+        schedules.forEach(s => {
+            if (!teacherTimetable[s.teacherId]) teacherTimetable[s.teacherId] = {};
+            if (!teacherTimetable[s.teacherId][s.day]) teacherTimetable[s.teacherId][s.day] = {};
+            teacherTimetable[s.teacherId][s.day][s.period] = true;
+
+            if (s.room) {
+                // ສ້າງ Key ແຍກໂຮງຮຽນ ເພື່ອບໍ່ໃຫ້ຫ້ອງ ມ.1/1 ຂອງໂຮງຮຽນອື່ນ ມາກວນໂຮງຮຽນປັດຈຸບັນ
+                const sTeacher = teachers.find(t => t.id === s.teacherId);
+                const sSchool = sTeacher ? sTeacher.school : 'Unknown';
+                const roomKey = sSchool + '_' + s.room; 
+                
+                if (!roomTimetable[roomKey]) roomTimetable[roomKey] = {};
+                if (!roomTimetable[roomKey][s.day]) roomTimetable[roomKey][s.day] = {};
+                roomTimetable[roomKey][s.day][s.period] = true;
+            }
+        });
+
+        Object.keys(currentSchoolAssigns).forEach(subjId => {
+            const assign = currentSchoolAssigns[subjId];
+            if (typeof assign !== 'object' || assign === null) return;
+            
+            const roomsCount = Number(assign.rooms) || 0;
+            
+            if (assign.teacherId && roomsCount > 0 && currentTeachersIds.includes(assign.teacherId)) {
+                const subj = subjects.find(s => s.id === subjId);
+                if (subj) {
+                    const subjHours = Number(subj.hours) || 0;
+                    const roomBaseName = subj.grade || 'ມ.';
+                    
+                    for (let r = 1; r <= roomsCount; r++) {
+                        const currentRoomName = `${roomBaseName}/${r}`;
+                        const roomKey = filterSchool + '_' + currentRoomName; // ໃຊ້ Key ແຍກໂຮງຮຽນ
+                        
+                        let twosToAssign = Math.floor(subjHours / 2);
+                        let onesToAssign = subjHours % 2;
+                        let daysUsed = new Set();
+                        let maxRetries = 200;
+
+                        // 1. ຈັດການຊົ່ວໂມງທີ່ເປັນຄູ່ (2 ຊ.ມ ຕິດກັນ)
+                        let attempt2 = 0;
+                        while (twosToAssign > 0 && attempt2 < maxRetries) {
+                            attempt2++;
+                            let placed = false;
+                            let days = [1, 2, 3, 4, 5].sort(() => Math.random() - 0.5);
+                            
+                            for (let d of days) {
+                                // ບັງຄັບເດັດຂາດ! ຫ້າມລົງຊ້ຳມື້ ສຳລັບວິຊາດຽວກັນໃນຫ້ອງດຽວກັນ (ລຶບການອະນຸລົມອອກ)
+                                if (daysUsed.has(d)) continue; 
+                                
+                                let pairs = [[1, 2], [3, 4], [5, 6]].sort(() => Math.random() - 0.5);
+                                
+                                for (let pair of pairs) {
+                                    let p1 = pair[0];
+                                    let p2 = pair[1];
+                                    
+                                    let tFree1 = !(teacherTimetable[assign.teacherId] && teacherTimetable[assign.teacherId][d] && teacherTimetable[assign.teacherId][d][p1]);
+                                    let tFree2 = !(teacherTimetable[assign.teacherId] && teacherTimetable[assign.teacherId][d] && teacherTimetable[assign.teacherId][d][p2]);
+                                    // ໃຊ້ roomKey ແທນ currentRoomName
+                                    let rFree1 = !(roomTimetable[roomKey] && roomTimetable[roomKey][d] && roomTimetable[roomKey][d][p1]);
+                                    let rFree2 = !(roomTimetable[roomKey] && roomTimetable[roomKey][d] && roomTimetable[roomKey][d][p2]);
+                                    
+                                    if (tFree1 && tFree2 && rFree1 && rFree2) {
+                                        if (!teacherTimetable[assign.teacherId]) teacherTimetable[assign.teacherId] = {};
+                                        if (!teacherTimetable[assign.teacherId][d]) teacherTimetable[assign.teacherId][d] = {};
+                                        teacherTimetable[assign.teacherId][d][p1] = true;
+                                        teacherTimetable[assign.teacherId][d][p2] = true;
+                                        
+                                        if (!roomTimetable[roomKey]) roomTimetable[roomKey] = {};
+                                        if (!roomTimetable[roomKey][d]) roomTimetable[roomKey][d] = {};
+                                        roomTimetable[roomKey][d][p1] = true;
+                                        roomTimetable[roomKey][d][p2] = true;
+                                        
+                                        let uid1 = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6);
+                                        let uid2 = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6);
+                                        
+                                        schedules.push({ id: uid1, teacherId: assign.teacherId, subject: subj.name, room: currentRoomName, day: d, period: p1 });
+                                        schedules.push({ id: uid2, teacherId: assign.teacherId, subject: subj.name, room: currentRoomName, day: d, period: p2 });
+                                        
+                                        daysUsed.add(d);
+                                        twosToAssign--;
+                                        placed = true;
+                                        break; 
+                                    }
+                                }
+                                if (placed) break; 
+                            }
+                        }
+                        
+                        // 2. ຈັດການຊົ່ວໂມງທີ່ເປັນເສດ (1 ຊ.ມ)
+                        let attempt1 = 0;
+                        while (onesToAssign > 0 && attempt1 < maxRetries) {
+                            attempt1++;
+                            let placed = false;
+                            let days = [1, 2, 3, 4, 5].sort(() => Math.random() - 0.5);
+                            
+                            for (let d of days) {
+                                // ບັງຄັບເດັດຂາດ! ຫ້າມລົງຊ້ຳມື້ ສຳລັບວິຊາດຽວກັນໃນຫ້ອງດຽວກັນ
+                                if (daysUsed.has(d)) continue;
+                                
+                                let periods = [1, 2, 3, 4, 5, 6, 7].sort(() => Math.random() - 0.5);
+                                if ((subjHours === 3 || subjHours === 5) && attempt1 < 20) {
+                                    periods = [7, 6, 5, 4, 3, 2, 1]; 
+                                }
+                                
+                                for (let p of periods) {
+                                    let tFree = !(teacherTimetable[assign.teacherId] && teacherTimetable[assign.teacherId][d] && teacherTimetable[assign.teacherId][d][p]);
+                                    let rFree = !(roomTimetable[roomKey] && roomTimetable[roomKey][d] && roomTimetable[roomKey][d][p]);
+                                    
+                                    if (tFree && rFree) {
+                                        if (!teacherTimetable[assign.teacherId]) teacherTimetable[assign.teacherId] = {};
+                                        if (!teacherTimetable[assign.teacherId][d]) teacherTimetable[assign.teacherId][d] = {};
+                                        teacherTimetable[assign.teacherId][d][p] = true;
+                                        
+                                        if (!roomTimetable[roomKey]) roomTimetable[roomKey] = {};
+                                        if (!roomTimetable[roomKey][d]) roomTimetable[roomKey][d] = {};
+                                        roomTimetable[roomKey][d][p] = true;
+                                        
+                                        let uid = Date.now().toString() + '_' + Math.random().toString(36).substr(2, 6);
+                                        schedules.push({ id: uid, teacherId: assign.teacherId, subject: subj.name, room: currentRoomName, day: d, period: p });
+                                        
+                                        daysUsed.add(d);
+                                        onesToAssign--;
+                                        placed = true;
+                                        break;
+                                    }
+                                }
+                                if (placed) break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        saveData();
+        // ຕັດ Alert ແຈ້ງເຕືອນສຳເລັດອອກ ເພື່ອຫຼຸດຂັ້ນຕອນການກົດ. ໃຫ້ລະບົບປ່ຽນໜ້າໄປເບິ່ງຜົນລັບເລີຍ
+        if (typeof showViewById === 'function') {
+            showViewById('all_schedules');
+        }
+        renderAll();
+        
+    } catch (e) {
+        console.error("Error generating schedules:", e);
+        alert("ລະບົບພົບຂໍ້ຜິດພາດ: " + e.message); // ເດັ້ງ Alert ຂອງ Browser ຂຶ້ນມາແທນຖ້າໂຄດ Error
+    }
+}
+
+/* ============================== SCHEDULES MANAGEMENT ============================== */
+function renderSchedules() {
+    try {
+        const tbody = document.getElementById('scheduleTable');
+        if (!tbody) return;
+
+        const filterSchool = document.getElementById("filterSchool")?.value;
+        if (!filterSchool) {
+            tbody.innerHTML = `<tr><td colspan="6"><div class="empty">ກະລຸນາເລືອກໂຮງຮຽນໃນໜ້າ Dashboard ກ່ອນ</div></td></tr>`;
+            return;
+        }
+
+        // ຍ້າຍຂໍ້ມູນແບບເກົ່າ (ຖ້າມີ) ໃຫ້ເຂົ້າໄປຢູ່ພາຍໃຕ້ໂຮງຮຽນປັດຈຸບັນ
+        const oldKeys = Object.keys(assignments).filter(k => k.startsWith('m') || k.startsWith('s_'));
+        if (oldKeys.length > 0) {
+            if (!assignments[filterSchool]) assignments[filterSchool] = {};
+            oldKeys.forEach(k => {
+                assignments[filterSchool][k] = assignments[k];
+                delete assignments[k];
+            });
+            localStorage.setItem('assignments', JSON.stringify(assignments));
+        }
+        
+        if(!assignments[filterSchool]) assignments[filterSchool] = {};
+        const currentSchoolAssigns = assignments[filterSchool];
+
+        const currentTeachers = getFilteredTeachers();
+        let teacherOptions = `<option value="">-- ເລືອກຄູສອນ --</option>`;
+        currentTeachers.forEach(t => {
+            teacherOptions += `<option value="${t.id}">${escapeHtml(t.name)}</option>`;
+        });
+
+        let html = '';
+        const grades = ['ມ.1', 'ມ.2', 'ມ.3', 'ມ.4', 'ມ.5', 'ມ.6', 'ມ.7'];
+
+        grades.forEach(grade => {
+            const gradeSubjects = subjects.filter(s => (s.grade || 'ມ.1') === grade);
+            if (gradeSubjects.length > 0) {
+                html += `<tr style="background:#f1f5f9; font-weight:bold;"><td colspan="6" style="text-align:left; padding-left:10px;">${grade}</td></tr>`;
+
+                let idx = 1;
+                gradeSubjects.forEach(subj => {
+                    const assign = currentSchoolAssigns[subj.id] || { teacherId: '', rooms: '' };
+                    const subjHours = subj.hours || 0;
+                    const roomsCount = Number(assign.rooms) || 0;
+                    const totalHours = subjHours * roomsCount;
+
+                    const selectedTeacherOptions = teacherOptions.replace(`value="${assign.teacherId}"`, `value="${assign.teacherId}" selected`);
+
+                    html += `
+                    <tr>
+                        <td>${idx++}</td>
+                        <td style="text-align: left;">${escapeHtml(subj.name)}</td>
+                        <td>${subjHours} ຊ.ມ</td>
+                        <td style="padding: 6px;">
+                            <select onchange="updateAssignment('${subj.id}', 'teacherId', this.value)" style="width:100%; border:1px solid #fca5a5; background:#fef2f2; outline:none;">
+                                ${selectedTeacherOptions}
+                            </select>
+                        </td>
+                        <td style="padding: 6px;">
+                            <input type="number" min="0" placeholder="0" value="${assign.rooms || ''}" onchange="updateAssignment('${subj.id}', 'rooms', this.value)" onkeyup="updateAssignment('${subj.id}', 'rooms', this.value)" style="width:100%; text-align:center; border:1px solid #fca5a5; background:#fef2f2; outline:none;">
+                        </td>
+                        <td style="font-weight:bold; color:${totalHours > 0 ? 'var(--primary)' : 'inherit'};" id="total_${subj.id}">${totalHours > 0 ? totalHours : '-'}</td>
+                    </tr>`;
+                });
+            }
+        });
+
+        tbody.innerHTML = html || `<tr><td colspan="6"><div class="empty">ບໍ່ມີຂໍ້ມູນວິຊາສອນ</div></td></tr>`;
+    } catch (e) {
+        console.error("Error in renderSchedules:", e);
+    }
+}
+
+function updateAssignment(subjectId, field, value) {
+    try {
+        const filterSchool = document.getElementById("filterSchool")?.value;
+        if (!filterSchool) {
+            sysAlert('ກະລຸນາເລືອກ "ໂຮງຮຽນ" ໃນໜ້າ Dashboard ກ່ອນ!');
+            return;
+        }
+
+        if (!assignments[filterSchool]) assignments[filterSchool] = {};
+        if (!assignments[filterSchool][subjectId]) assignments[filterSchool][subjectId] = { teacherId: '', rooms: '' };
+        
+        if (field === 'rooms') {
+            assignments[filterSchool][subjectId][field] = value === '' ? '' : Number(value);
+            const subj = subjects.find(s => s.id === subjectId);
+            const roomsCount = Number(assignments[filterSchool][subjectId].rooms) || 0;
+            const total = (subj.hours || 0) * roomsCount;
+            const totalTd = document.getElementById(`total_${subjectId}`);
+            if (totalTd) {
+                totalTd.textContent = total > 0 ? total : '-';
+                totalTd.style.color = total > 0 ? 'var(--primary)' : 'inherit';
+            }
+        } else {
+            assignments[filterSchool][subjectId][field] = value;
+        }
+        
+        localStorage.setItem('assignments', JSON.stringify(assignments));
+    } catch (e) {
+        console.error("Error in updateAssignment:", e);
+    }
+}
+/* ============================== ALL SCHEDULES (ຕາຕະລາງສອນລວມທຸກຄົນ) ============================== */
+function renderAllSchedules() {
+    const tbody = document.getElementById('allSchedulesTable');
+    if (!tbody) return;
+    const currentTeachers = getFilteredTeachers();
+    if (!currentTeachers.length) {
+        tbody.innerHTML = `<tr><td colspan="38"><div class="empty">ບໍ່ພົບຂໍ້ມູນ (ກະລຸນາກວດເບິ່ງການເລືອກ ແຂວງ, ເມືອງ, ໂຮງຮຽນ)</div></td></tr>`;
+        return;
+    }
+
+    // ດຶງຄ່າຈາກ Dashboard ມາສະແດງໃນຫົວເອກະສານ ຕອນພິມ
+    const filterDistrict = document.getElementById("filterDistrict")?.value;
+    const filterSchool = document.getElementById("filterSchool")?.value;
+    
+    const distEl1 = document.getElementById('printAllDist1');
+    const distEl2 = document.getElementById('printAllDist2');
+    const schoolEl = document.getElementById('printAllSchool');
+    
+    if (distEl1) distEl1.textContent = filterDistrict ? `ເມືອງ ${filterDistrict}` : '...........................................';
+    if (distEl2) distEl2.textContent = filterDistrict ? filterDistrict : '......................';
+    if (schoolEl) schoolEl.textContent = filterSchool ? filterSchool : '.......................................................................';
+
+    let html = '';
+    let displayIndex = 1;
+
+    // ວົນລູບເອົາຄູທຸກຄົນມາສະແດງ
+    currentTeachers.forEach((t) => {
+        const tSchedules = schedules.filter(s => s.teacherId === t.id);
+
+        let rowHtml = `<tr>
+            <td>${displayIndex++}</td>
+            <td class="name-cell">${escapeHtml(t.name)}</td>`;
+            
+        for(let d = 1; d <= 5; d++) {
+            for(let p = 1; p <= 7; p++) {
+        const slot = tSchedules.find(s => s.day === d && s.period === p);
+            if(slot) {
+                    let label = '';
+                    let innerText = '';
+                    
+                    let displaySubject = slot.subject;
+                    if (slot.subject) {
+                        // 1. ລົບຍະຫວ່າງອອກກ່ອນທຽບຊື່ ເພື່ອປ້ອງກັນການຍະຫວ່າງຜິດພາດ (ເຊັ່ນ: ມີຍະຫວ່າງຊ້ອນກັນ)
+                        const cleanSlotName = slot.subject.replace(/\s+/g, '');
+                        const subjInfo = subjects.find(s => s.name.replace(/\s+/g, '') === cleanSlotName);
+                        
+                        // 2. ຖ້າມີການປ້ອນ "ຊື່ຫຍໍ້" ໄວ້ໃນຖານຂໍ້ມູນ ໃຫ້ໃຊ້ຊື່ຫຍໍ້ນັ້ນ
+                        if (subjInfo && subjInfo.shortName && subjInfo.shortName.trim() !== '') {
+                            displaySubject = subjInfo.shortName.trim(); 
+                        } 
+                        // 3. (ຕົວຊ່ວຍພິເສດ) ຖ້າຍັງບໍ່ທັນປ້ອນຊື່ຫຍໍ້ ແຕ່ຊື່ວິຊາມີວົງເລັບ ໃຫ້ຕັດເອົາແຕ່ຊື່ທາງໜ້າອັດຕະໂນມັດ
+                        else if (displaySubject.includes('(')) {
+                            displaySubject = displaySubject.split('(')[0].trim();
+                        }
+                    }
+                    
+                    if (displaySubject && slot.room) innerText = `${displaySubject}\n${slot.room}`;
+                    else if (displaySubject) innerText = displaySubject;
+                    else if (slot.room) innerText = slot.room;
+                    
+                    if (innerText) {
+                        let formattedText = innerText.replace(/\n/g, '<br>');
+                        label = `<div style="font-size: 11px !important; font-weight: bold; line-height: 1.3 !important; white-space: normal !important; min-width: 30px; max-width: 50px; word-wrap: break-word; margin: 0 auto; padding: 2px 0; color: var(--primary2);">${formattedText}</div>`;
+                    } else {
+                        label = '✔';
+                    }
+                    
+                    rowHtml += `<td class="slot-cell editable-cell" style="vertical-align: middle; text-align: center; cursor:pointer;" onclick="openSlotModal('${t.id}', ${d}, ${p}, '${slot.id}')" title="ຄລິກເພື່ອແກ້ໄຂ / ຍ້າຍ / ປ່ຽນຄູ / ລຶບ">${label}</td>`;
+                } else {
+                    rowHtml += `<td class="editable-cell" style="cursor:pointer;" onclick="openSlotModal('${t.id}', ${d}, ${p}, null)" title="ຄລິກເພື່ອເພີ່ມການສອນ (ດ້ວຍມື)"></td>`;
+                }
+            }
+        }
+        
+        rowHtml += `
+            <td></td> 
+        </tr>`;
+        
+        html += rowHtml;
+    });
+
+    tbody.innerHTML = html;
+}
+/* ==============================
+   REPORTS (EXCEL LIKE)
+============================== */
+function renderExcelReport() {
+    const tbody = document.getElementById('reportTableExcel');
+    const currentTeachers = getFilteredTeachers();
+    if (!currentTeachers.length) {
+        tbody.innerHTML = `<tr><td colspan="43"><div class="empty">ບໍ່ພົບຂໍ້ມູນ (ກະລຸນາກວດເບິ່ງການເລືອກ ແຂວງ, ເມືອງ, ໂຮງຮຽນ)</div></td></tr>`;
+        return;
+    }
+
+    // ດຶງຄ່າຈາກ Dashboard ມາສະແດງໃນຫົວເອກະສານ (ເມືອງ ແລະ ໂຮງຮຽນ)
+    const filterDistrict = document.getElementById("filterDistrict")?.value;
+    const filterSchool = document.getElementById("filterSchool")?.value;
+    
+    const distEl1 = document.getElementById('printDistrict1');
+    const distEl2 = document.getElementById('printDistrict2');
+    const schoolEl = document.getElementById('printSchool');
+    
+    if (distEl1) distEl1.textContent = filterDistrict ? `ເມືອງ ${filterDistrict}` : '...........................................';
+    if (distEl2) distEl2.textContent = filterDistrict ? filterDistrict : '......................';
+    if (schoolEl) schoolEl.textContent = filterSchool ? filterSchool : '.......................................................................';
+
+    // ດຶງຄ່າເດືອນ ແລະ ປີ
+    const monthInput = document.getElementById('reportMonth');
+    if (!monthInput.value) {
+        const now = new Date();
+        monthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    }
+    const [year, month] = monthInput.value.split('-').map(Number);
+
+    // === ເພີ່ມໃໝ່: ຄິດໄລ່ ແລະ ສະແດງເດືອນ, ປີ ແລະ ສົກຮຽນ ===
+    let schoolYearStart = year;
+    let schoolYearEnd = year + 1;
+    
+    // ຖ້າເປັນເດືອນ 1 ຫາ 8 (ກ່ອນເດືອນ 9) ສະແດງວ່າເປັນພາກຮຽນທີ 2 ຂອງສົກຮຽນປີກາຍ
+    if (month < 9) {
+        schoolYearStart = year - 1;
+        schoolYearEnd = year;
+    }
+
+    const pMonth = document.getElementById('printMonth');
+    const pYear = document.getElementById('printYear');
+    const pSy1 = document.getElementById('printSchoolYear1');
+    const pSy2 = document.getElementById('printSchoolYear2');
+
+    if (pMonth) pMonth.textContent = month; // ສະແດງເດືອນ
+    if (pYear) pYear.textContent = year;    // ສະແດງປີ
+    if (pSy1) pSy1.textContent = schoolYearStart; // ສະແດງປີເລີ່ມຕົ້ນສົກຮຽນ
+    if (pSy2) pSy2.textContent = schoolYearEnd;   // ສະແດງປີທ້າຍສົກຮຽນ
+    // =======================================================
+
+    const holidaysList = ['07/10', '02/12', '01/01', '08/03', '14/04', '15/04', '16/04', '01/05'];
+    
+    let holidayCounts = {1:0, 2:0, 3:0, 4:0, 5:0}; 
+    const daysInMonth = new Date(year, month, 0).getDate();
+    for(let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(year, month - 1, d);
+        const dayOfWeek = date.getDay();
+        if(dayOfWeek >= 1 && dayOfWeek <= 5) {
+            const dateString = `${String(d).padStart(2, '0')}/${String(month).padStart(2, '0')}`;
+            if(holidaysList.includes(dateString)) holidayCounts[dayOfWeek]++;
+        }
+    }
+
+// ແຍກຂໍ້ມູນຄູອອກເປັນກຸ່ມຕາມ "ໂຮງຮຽນ"
+    const groupedBySchool = {};
+    currentTeachers.forEach(t => {
+        const sch = t.school || 'ໂຮງຮຽນທີ່ບໍ່ໄດ້ລະບຸສັງກັດ';
+        if (!groupedBySchool[sch]) groupedBySchool[sch] = [];
+        groupedBySchool[sch].push(t);
+    });
+
+    let html = '';
+
+    // ວົນລູບສະແດງຜົນຕາມແຕ່ລະໂຮງຮຽນ
+    const schoolNames = Object.keys(groupedBySchool).sort();
+    
+    schoolNames.forEach((schoolName) => {
+        const teachersInSchool = groupedBySchool[schoolName];
+        let schoolHtml = '';
+        let displayIndex = 1; // ຣີເຊັດລຳດັບ 1 ໃໝ່ເມື່ອຂຶ້ນໂຮງຮຽນໃໝ່
+        let hasValidTeacherInSchool = false;
+
+        teachersInSchool.forEach((t) => {
+            const tSchedules = schedules.filter(s => s.teacherId === t.id);
+            const totalWeek = tSchedules.length;
+            const required = t.requiredHours || 0;
+            
+            let overWeek = totalWeek - required;
+            if(overWeek < 0) overWeek = 0;
+            
+            const overMonth = overWeek * 4; 
+            
+            let holidayHoursMonth = 0;
+            tSchedules.forEach(s => { holidayHoursMonth += holidayCounts[s.day] * 1; });
+
+            let actualTotal = overMonth - holidayHoursMonth;
+            if (actualTotal < 0) actualTotal = 0;
+
+            // ເຊື່ອງຄູທີ່ບໍ່ມີຊົ່ວໂມງເກີນ
+            if (actualTotal <= 0) {
+                return; 
+            }
+
+            hasValidTeacherInSchool = true;
+
+            let rowHtml = `<tr>
+                <td>${displayIndex++}</td>
+                <td class="name-cell">${escapeHtml(t.name)}</td>
+                <td style="white-space: nowrap;">${escapeHtml(t.position || '-')}</td>`;
+                
+            for(let d = 1; d <= 5; d++) {
+                for(let p = 1; p <= 7; p++) {
+                    const slot = tSchedules.find(s => s.day === d && s.period === p);
+                    if(slot) {
+                        let label = '';
+                        // ສະແດງສະເພາະຊື່ຫ້ອງ ແລະ ໝຸນຕົວໜັງສື 90 ອົງສາ (ຈາກລຸ່ມຂຶ້ນເທິງ) 
+                        if (slot.room) {
+                            label = `<div style="writing-mode: vertical-rl; transform: rotate(180deg); display: inline-block; white-space: nowrap;">${slot.room}</div>`;
+                        } else {
+                            label = '✔';
+                        }
+                        
+                        rowHtml += `<td class="slot-cell editable-cell" style="line-height:1.2; cursor:pointer; vertical-align: middle;" onclick="openSlotModal('${t.id}', ${d}, ${p}, '${slot.id}')" title="ຄລິກເພື່ອແກ້ໄຂ / ຍ້າຍ / ປ່ຽນຄູ / ລຶບ">${label}</td>`;
+                    } else {
+                        rowHtml += `<td class="editable-cell" style="cursor:pointer;" onclick="openSlotModal('${t.id}', ${d}, ${p}, null)" title="ຄລິກເພື່ອເພີ່ມການສອນ (ດ້ວຍມື)"></td>`;
+                    }
+                }
+            }
+            
+            rowHtml += `
+                <td style="font-weight:bold;">${totalWeek}</td>
+                <td>${required}</td>
+                <td style="color:var(--red); font-weight:bold;">${overWeek > 0 ? overWeek : ''}</td>
+                <td style="color:var(--primary); font-weight:bold;">${overMonth > 0 ? overMonth : ''}</td>
+                <td style="color:#d97706; font-weight:bold;">${holidayHoursMonth > 0 ? holidayHoursMonth : ''}</td> 
+                <td style="color:var(--green); font-weight:bold;">${actualTotal > 0 ? actualTotal : ''}</td> 
+                <td></td> 
+            </tr>`;
+            
+            schoolHtml += rowHtml;
+        });
+
+        // ຖ້າມີຄູທີ່ໄດ້ຊົ່ວໂມງເກີນໃນໂຮງຮຽນນີ້ ໃຫ້ເພີ່ມຫົວຂໍ້ຊື່ໂຮງຮຽນຂັ້ນໄວ້ທາງເທິງ
+        if (hasValidTeacherInSchool) {
+            html += `
+            <tr style="background:#f1f5f9; font-weight:bold;">
+                <td colspan="44" style="text-align:left; color:var(--primary); padding-left:15px; border-bottom: 2px solid var(--primary);">
+                    🏫 ໂຮງຮຽນ: ${escapeHtml(schoolName)}
+                </td>
+            </tr>`;
+            html += schoolHtml;
+        }
+    });
+
+    if (html === '') {
+        tbody.innerHTML = `<tr><td colspan="43"><div class="empty">ບໍ່ມີຄູທີ່ໄດ້ຊົ່ວໂມງເກີນໃນໂຮງຮຽນນີ້</div></td></tr>`;
+    } else {
+        tbody.innerHTML = html;
+    }
+}
+
+/* ============================== DASHBOARD ============================== */
+function renderDashboard() {
+    const currentTeachers = getFilteredTeachers();
+    const currentTeachersIds = currentTeachers.map(t => t.id);
+    const currentSchedules = schedules.filter(s => currentTeachersIds.includes(s.teacherId));
+    
+    const statTeachers = document.getElementById('statTeachers');
+    const statSchedules = document.getElementById('statSchedules');
+    
+    if (statTeachers) statTeachers.textContent = currentTeachers.length;
+    if (statSchedules) statSchedules.textContent = currentSchedules.length;
+}
+
+/* ============================== MODAL CLOSER ============================== */
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-bg').forEach(bg => {
+    bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('show'); });
+});
+
+function renderFinanceReport() {
+    const tbody = document.getElementById('financeTableExcel');
+    const signatureContainer = document.getElementById('financeSignatureContainer'); // ດຶງກ່ອງລາຍເຊັນມາ
+    if (!tbody) return;
+    const currentTeachers = getFilteredTeachers();
+    
+    if (!currentTeachers.length) {
+        tbody.innerHTML = `<tr><td colspan="11"><div class="empty">ບໍ່ພົບຂໍ້ມູນ (ກະລຸນາກວດເບິ່ງການເລືອກ ແຂວງ, ເມືອງ, ໂຮງຮຽນ)</div></td></tr>`;
+        if (signatureContainer) signatureContainer.innerHTML = '';
+        return;
+    }
+
+    // ດຶງຄ່າເດືອນເລີ່ມຕົ້ນ ແລະ ສິ້ນສຸດ
+    const startInput = document.getElementById('financeMonthStart');
+    const endInput = document.getElementById('financeMonthEnd');
+    const now = new Date();
+    const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    
+    if (!startInput.value) startInput.value = currentMonthStr;
+    if (!endInput.value) endInput.value = startInput.value;
+
+    let dStart = new Date(startInput.value + '-01');
+    let dEnd = new Date(endInput.value + '-01');
+
+    if (dStart > dEnd) {
+        let temp = dStart; dStart = dEnd; dEnd = temp;
+    }
+
+    const startYear = dStart.getFullYear();
+    const startMonth = dStart.getMonth() + 1;
+    const endYear = dEnd.getFullYear();
+    const endMonth = dEnd.getMonth() + 1;
+    const totalMonthsRange = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+    
+    // ອັບເດດສ່ວນຫົວເອກະສານຕອນພິມ
+    const filterDistrict = document.getElementById("filterDistrict")?.value;
+    const filterSchool = document.getElementById("filterSchool")?.value;
+    
+    const distEl1 = document.getElementById('printFinanceDistrict1');
+    const distEl2 = document.getElementById('printFinanceDistrict2');
+    const schoolEl = document.getElementById('printFinanceSchool');
+    
+    if (distEl1) distEl1.textContent = filterDistrict ? `ເມືອງ ${filterDistrict}` : '...........................................';
+    if (distEl2) distEl2.textContent = filterDistrict ? filterDistrict : '......................';
+    if (schoolEl) schoolEl.textContent = filterSchool ? filterSchool : (filterDistrict ? `ທຸກໂຮງຮຽນໃນເມືອງ ${filterDistrict}` : 'ທຸກໂຮງຮຽນ');
+
+    let schoolYearStart = startYear;
+    let schoolYearEnd = startYear + 1;
+    if (startMonth < 9) {
+        schoolYearStart = startYear - 1;
+        schoolYearEnd = startYear;
+    }
+
+    const pRange = document.getElementById('printFinanceRange');
+    const pSy1 = document.getElementById('printFinanceSchoolYear1');
+    const pSy2 = document.getElementById('printFinanceSchoolYear2');
+
+    if (pRange) {
+        if (startYear === endYear && startMonth === endMonth) {
+            pRange.textContent = `${String(startMonth).padStart(2,'0')}/${startYear}`;
+        } else {
+            pRange.textContent = `${String(startMonth).padStart(2,'0')}/${startYear} ຫາ ${String(endMonth).padStart(2,'0')}/${endYear}`;
+        }
+    }
+    if (pSy1) pSy1.textContent = schoolYearStart;
+    if (pSy2) pSy2.textContent = schoolYearEnd;
+
+    // ຄິດໄລ່ອັດຕາວັນພັກ
+    const holidaysList = ['07/10', '02/12', '01/01', '08/03', '14/04', '15/04', '16/04', '01/05'];
+    let holidayCounts = {1:0, 2:0, 3:0, 4:0, 5:0}; 
+    
+    let currentD = new Date(dStart);
+    while (currentD <= dEnd) {
+        let y = currentD.getFullYear();
+        let m = currentD.getMonth() + 1;
+        let daysInMonth = new Date(y, m, 0).getDate();
+
+        for(let d = 1; d <= daysInMonth; d++) {
+            const date = new Date(y, m - 1, d);
+            const dayOfWeek = date.getDay();
+            if(dayOfWeek >= 1 && dayOfWeek <= 5) {
+                const dateString = `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}`;
+                if(holidaysList.includes(dateString)) holidayCounts[dayOfWeek]++;
+            }
+        }
+        currentD.setMonth(currentD.getMonth() + 1);
+    }
+
+    // ແຍກຂໍ້ມູນຄູອອກເປັນກຸ່ມຕາມ "ໂຮງຮຽນ"
+    const groupedBySchool = {};
+    currentTeachers.forEach(t => {
+        const sch = t.school || 'ໂຮງຮຽນທີ່ບໍ່ໄດ້ລະບຸສັງກັດ';
+        if (!groupedBySchool[sch]) groupedBySchool[sch] = [];
+        groupedBySchool[sch].push(t);
+    });
+
+    let html = '';
+    let grandTotalOtPay = 0;
+    let grandTotalTax = 0;
+    let grandTotalNet = 0;
+    const formatNum = (num) => num.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+    // ວົນລູບສະແດງຜົນຕາມແຕ່ລະໂຮງຮຽນ
+    const schoolNames = Object.keys(groupedBySchool).sort();
+    
+    schoolNames.forEach((schoolName) => {
+        const teachersInSchool = groupedBySchool[schoolName];
+        let schoolHtml = '';
+        let displayIndex = 1; // ຣີເຊັດລຳດັບ 1 ໃໝ່ເມື່ອຂຶ້ນໂຮງຮຽນໃໝ່
+        let hasValidTeacherInSchool = false;
+
+        teachersInSchool.forEach((t) => {
+            const tSchedules = schedules.filter(s => s.teacherId === t.id);
+            const totalWeek = tSchedules.length;
+            const required = t.requiredHours || 0;
+            let overWeek = totalWeek - required;
+            if (overWeek < 0) overWeek = 0;
+            
+            const overRangeTotal = overWeek * 4 * totalMonthsRange;
+
+            let holidayHoursRange = 0;
+            tSchedules.forEach(s => { holidayHoursRange += holidayCounts[s.day] * 1; });
+
+            let actualTotal = overRangeTotal - holidayHoursRange;
+            if (actualTotal < 0) actualTotal = 0;
+
+            const baseSalary = t.salary || 0;
+            const otHours = actualTotal;
+
+            let otPayTotal = Math.round((baseSalary * otHours * 3) / 154);
+            let avgMonthlyOtPay = otPayTotal / totalMonthsRange; 
+            let monthlyTax = 0;
+            
+            if (baseSalary > 3000000) {
+                let amountToTax = avgMonthlyOtPay; 
+                if (amountToTax > 65000000) { monthlyTax += (amountToTax - 65000000) * 0.25; amountToTax = 65000000; }
+                if (amountToTax > 25000000) { monthlyTax += (amountToTax - 25000000) * 0.20; amountToTax = 25000000; }
+                if (amountToTax > 15000000) { monthlyTax += (amountToTax - 15000000) * 0.15; amountToTax = 15000000; }
+                if (amountToTax > 5000000) { monthlyTax += (amountToTax - 5000000) * 0.10; amountToTax = 5000000; }
+                if (amountToTax > 0) { monthlyTax += amountToTax * 0.05; }
+                monthlyTax = Math.round(monthlyTax); 
+            }
+            
+            let taxTotal = monthlyTax * totalMonthsRange; 
+            let netPay = otPayTotal - taxTotal;
+
+            if (netPay > 0) { 
+                hasValidTeacherInSchool = true;
+                grandTotalOtPay += otPayTotal;
+                grandTotalTax += taxTotal;
+                grandTotalNet += netPay;
+
+                schoolHtml += `
+                <tr>
+                    <td>${displayIndex++}</td>
+                    <td class="name-cell">${escapeHtml(t.name)}</td>
+                    <td>${escapeHtml(t.level || '-')}</td>
+                    <td>${escapeHtml(t.step || '-')}</td>
+                    <td>${escapeHtml(t.index || '-')}</td>
+                    <td style="text-align:right;">${baseSalary > 0 ? formatNum(baseSalary) : '-'}</td>
+                    <td style="font-weight:bold; color:var(--primary);">${otHours}</td>
+                    <td style="text-align:right;">${formatNum(otPayTotal)}</td>
+                    <td style="text-align:right;">${taxTotal > 0 ? formatNum(taxTotal) : '-'}</td>
+                    <td style="text-align:right; font-weight:bold; color:var(--green);">${formatNum(netPay)}</td>
+                    <td></td>
+                </tr>`;
+            }
+        });
+
+        // ຖ້າມີຄູທີ່ໄດ້ເງິນເກີນໃນໂຮງຮຽນນີ້ ໃຫ້ເພີ່ມຫົວຂໍ້ຊື່ໂຮງຮຽນຂັ້ນໄວ້ທາງເທິງ
+        if (hasValidTeacherInSchool) {
+            html += `
+            <tr style="background:#f1f5f9; font-weight:bold;">
+                <td colspan="11" style="text-align:left; color:var(--primary); padding-left:15px; border-bottom: 2px solid var(--primary);">
+                    🏫 ໂຮງຮຽນ: ${escapeHtml(schoolName)}
+                </td>
+            </tr>`;
+            html += schoolHtml;
+        }
+    });
+
+    if (html === '') {
+        tbody.innerHTML = `<tr><td colspan="11"><div class="empty">ບໍ່ມີຄູທີ່ໄດ້ຮັບເງິນຊົ່ວໂມງເກີນໃນຊ່ວງເດືອນນີ້</div></td></tr>`;
+        if (signatureContainer) signatureContainer.innerHTML = '';
+    } else {
+        // ແຖວລວມຍອດທັງໝົດ
+        html += `
+            <tr style="background:#f8fafc; font-weight:bold; border-top: 2px solid var(--primary);">
+                <td colspan="6" style="text-align:right;">ລວມທັງໝົດທຸກໂຮງຮຽນ:</td>
+                <td style="text-align:center;">-</td>
+                <td style="text-align:right;">${grandTotalOtPay > 0 ? grandTotalOtPay.toLocaleString('en-US') : '0'}</td>
+                <td style="text-align:right;">${grandTotalTax > 0 ? grandTotalTax.toLocaleString('en-US') : '0'}</td>
+                <td style="text-align:right; color:var(--green);">${grandTotalNet > 0 ? grandTotalNet.toLocaleString('en-US') : '0'}</td>
+                <td></td>
+            </tr>
+        `;
+        tbody.innerHTML = html;
+
+// --- ລະບົບສ້າງລາຍເຊັນອັດຕະໂນມັດ ຕາມເງື່ອນໄຂ ---
+        if (signatureContainer) {
+            // ຖ້າບໍ່ໄດ້ເລືອກໂຮງຮຽນ ແຕ່ເລືອກເມືອງ = ແມ່ນເບິ່ງແບບລວມທັງເມືອງ
+            const isDistrictSummary = !filterSchool && filterDistrict;
+            
+            if (isDistrictSummary) {
+                // ລາຍເຊັນ 4 ຕຳແໜ່ງ (ສຳລັບສະຫຼຸບຂັ້ນເມືອງ)
+                // ປັບ margin-top ເຫຼືອພຽງ 15px ເພື່ອຫຼຸດຊ່ອງຫວ່າງ
+                signatureContainer.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; padding: 0 10px; margin-top: 15px;">
+                        <div style="width: 24%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າຫ້ອງການ ການເງິນເມືອງ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                        <div style="width: 24%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າໜ່ວຍງານງົບປະມານແຫ່ງລັດ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                        <div style="width: 24%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າຫ້ອງການສຶກສາທິການ<br>ແລະ ກິລາເມືອງ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                        <div style="width: 24%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຜູ້ສັງລວມ/ວິຊາການ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                    </div>
+                `;
+            } else {
+                // ລາຍເຊັນ 5 ຕຳແໜ່ງ (ສຳລັບເບິ່ງແບບໂຮງຮຽນດຽວ)
+                signatureContainer.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px; padding: 0 50px; margin-top: 15px;">
+                        <div style="width: 35%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຜູ້ອຳນວຍການໂຮງຮຽນ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                        <div style="width: 35%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຜູ້ສັງລວມ/ຜູ້ຄິດໄລ່</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0 10px; margin-top: 30px;">
+                        <div style="width: 32%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າຫ້ອງການສຶກສາທິການ<br>ແລະ ກິລາເມືອງ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                        <div style="width: 32%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າໜ່ວຍງານ ບໍລິຫານ, ສະຖິຕິ<br>ແລະ ແຜນການ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                        <div style="width: 32%;">
+                            <div class="editable-title" contenteditable="true" style="font-weight: 800; margin-bottom: 50px;">ຫົວໜ້າໜ່ວຍງານ ການສຶກສາກ່ອນໄວຮຽນ<br>ສາມັນສຶກສາ ແລະ ວິທະຍາສາດ</div>
+                            <input type="text" class="print-input" placeholder="..........................................">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    }
+}
+/* ============================== RENDER ALL ============================== */
+function renderAll() {
+    renderDashboard();
+    renderTeachers();
+    renderSchedules();
+    renderExcelReport();
+}
+
+function openSubjectModal() {
+    document.getElementById('editSubjectId').value = '';
+    document.getElementById('subjectModalTitle').textContent = 'ເພີ່ມວິຊາສອນ';
+    document.getElementById('subjectGrade').value = currentSelectedGrade !== 'all' ? currentSelectedGrade : 'ມ.1';
+    document.getElementById('subjectName').value = '';
+    document.getElementById('subjectShortName').value = '';
+    document.getElementById('subjectHours').value = '4';
+    document.getElementById('subjectNote').value = '';
+    document.getElementById('subjectModal').classList.add('show');
+}
+
+function editSubject(id) {
+    const s = subjects.find(x => x.id === id);
+    if (!s) return;
+    document.getElementById('editSubjectId').value = s.id;
+    document.getElementById('subjectModalTitle').textContent = 'ແກ້ໄຂຊື່ວິຊາ';
+    document.getElementById('subjectGrade').value = s.grade || 'ມ.1';
+    document.getElementById('subjectName').value = s.name;
+    document.getElementById('subjectShortName').value = s.shortName || '';
+    document.getElementById('subjectHours').value = s.hours || 4;
+    document.getElementById('subjectNote').value = s.note || '';
+    document.getElementById('subjectModal').classList.add('show');
+}
+
+async function saveSubject() {
+    const name = document.getElementById('subjectName').value.trim();
+    const shortName = document.getElementById('subjectShortName').value.trim();
+    const grade = document.getElementById('subjectGrade').value;
+    const hours = Number(document.getElementById('subjectHours').value) || 4;
+    const note = document.getElementById('subjectNote').value.trim();
+
+    if (!name) { await sysAlert('ກະລຸນາໃສ່ຊື່ວິຊາ'); return; }
+    if (!shortName) { await sysAlert('ກະລຸນາໃສ່ຊື່ຫຍໍ້ວິຊາ'); return; }
+    
+    const editId = document.getElementById('editSubjectId').value;
+    if (editId) {
+        const index = subjects.findIndex(x => x.id === editId);
+        if (index > -1) {
+            const oldName = subjects[index].name;
+            
+            // ກວດສອບວ່າມີວິຊາຊື່ນີ້ໃນຊັ້ນອື່ນໆອີກຫຼືບໍ່
+            const sameNameSubjects = subjects.filter(s => s.name === oldName && s.id !== editId);
+            
+            if (sameNameSubjects.length > 0) {
+                const confirmUpdateAll = await sysConfirm(`ພົບວິຊາ "${oldName}" ໃນຊັ້ນອື່ນໆອີກ ${sameNameSubjects.length} ລາຍການ.\n\nທ່ານຕ້ອງການອັບເດດ "ຊື່ຫຍໍ້" ໃຫ້ຄືກັນທັງໝົດເລີຍຫຼືບໍ່?`);
+                
+                if (confirmUpdateAll) {
+                    // ອັບເດດໃຫ້ທຸກຊັ້ນທີ່ມີຊື່ວິຊາຄືກັນ
+                    subjects.forEach(s => {
+                        if (s.name === oldName) {
+                            s.name = name; // ອັບເດດຊື່ຫຼັກນຳ ກໍລະນີມີການແປງຊື່ຫຼັກເລັກນ້ອຍ
+                            s.shortName = shortName;
+                        }
+                    });
+                }
+            }
+
+            // ອັບເດດຂໍ້ມູນສຳລັບວິຊາທີ່ກຳລັງແກ້ໄຂຢູ່ປັດຈຸບັນ
+            subjects[index].name = name;
+            subjects[index].shortName = shortName;
+            subjects[index].grade = grade;
+            subjects[index].hours = hours;
+            subjects[index].note = note;
+        }
+    } else {
+        subjects.push({ id: 's_' + Date.now().toString(), grade, name, shortName, hours, note });
+    }
+    
+    saveData();
+    closeModal('subjectModal');
+    renderAll();
+}
+
+async function deleteSubject(id) {
+    const isConfirm = await sysConfirm('ຕ້ອງການລຶບວິຊານີ້ອອກຈາກຖານຂໍ້ມູນບໍ? (ບໍ່ກະທົບກັບຕາຕະລາງທີ່ບັນທຶກໄປແລ້ວ)');
+    if (!isConfirm) return;
+    subjects = subjects.filter(s => s.id !== id);
+    saveData();
+    renderAll();
+}
+
+// ຟັງຊັນກັ່ນຕອງຕາຕະລາງວິຊາຕາມຊັ້ນຮຽນທີ່ເລືອກຈາກ Dropdown ໃນໜ້າ Toolbar
+let currentSelectedGrade = 'all';
+function filterSubjectsByGrade(grade) {
+    currentSelectedGrade = grade;
+    renderSubjects(); // ລີເຟຣຊຕາຕະລາງວິຊາໃໝ່ທັນທີ
+}
+
+// ປັບປຸງຟັງຊັນ renderSubjects ເກົ່າ ໃຫ້ຮອງຮັບການກັ່ນຕອງຕາມ grade
+function renderSubjects() {
+    const tbody = document.getElementById('subjectTable');
+    if (!tbody) return;
+    
+    let list = subjects;
+    if (currentSelectedGrade !== 'all') {
+        list = subjects.filter(s => (s.grade || 'ມ.1') === currentSelectedGrade);
+    }
+
+    if (!list.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;"><div class="empty">ຍັງບໍ່ມີຂໍ້ມູນວິຊາໃນຫຼັກສູດ ${currentSelectedGrade}</div></td></tr>`;
+        return;
+    }
+    
+    if (currentSelectedGrade === 'all') {
+        let html = '';
+        const grades = ['ມ.1', 'ມ.2', 'ມ.3', 'ມ.4', 'ມ.5', 'ມ.6', 'ມ.7'];
+        let globalIndex = 1;
+
+        grades.forEach(g => {
+            const gradeSubjects = subjects.filter(s => (s.grade || 'ມ.1') === g);
+            if (gradeSubjects.length > 0) {
+                // ປ່ຽນ colspan ເປັນ 6 ໃຫ້ກວມເອົາຖັນຊື່ຫຍໍ້
+                html += `<tr style="background:#f1f5f9; font-weight:bold;"><td colspan="6" style="color:var(--primary);">${g}</td></tr>`;
+                
+                gradeSubjects.forEach((s) => {
+                    html += `
+                        <tr>
+                            <td>${globalIndex++}</td>
+                            <td><b>${escapeHtml(s.name)}</b></td>
+                            <td style="color:var(--primary2); font-weight:bold;">${escapeHtml(s.shortName || '-')}</td>
+                            <td style="text-align: center;"><span class="badge badge-blue">${s.hours || 4} ຊ.ມ</span></td>
+                            <td style="text-align: center;">
+                                <button class="btn btn-blue" onclick="editSubject('${s.id}')">✏️</button>
+                                <button class="btn btn-danger" onclick="deleteSubject('${s.id}')">🗑️</button>
+                            </td>
+                            <td>${escapeHtml(s.note || '-')}</td>
+                        </tr>
+                    `;
+                });
+            }
+        });
+        tbody.innerHTML = html;
+    } else {
+        tbody.innerHTML = list.map((s, i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td><b>${escapeHtml(s.name)}</b></td>
+                <td style="color:var(--primary2); font-weight:bold;">${escapeHtml(s.shortName || '-')}</td>
+                <td style="text-align: center;"><span class="badge badge-blue">${s.hours || 4} ຊ.ມ</span></td>
+                <td style="text-align: center;">
+                    <button class="btn btn-blue" onclick="editSubject('${s.id}')">✏️</button>
+                    <button class="btn btn-danger" onclick="deleteSubject('${s.id}')">🗑️</button>
+                </td>
+                <td>${escapeHtml(s.note || '-')}</td>
+            </tr>
+        `).join('');
+    }
+}
+
+/* ============================== MODAL CLOSER ============================== */
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-bg').forEach(bg => {
+    bg.addEventListener('click', e => { 
+        if (e.target === bg) {
+            // ບັງຄັບໃຫ້ກົດປຸ່ມເທົ່ານັ້ນ ຖ້າເປັນປ໋ອບອັບລະບົບແຈ້ງເຕືອນ
+            if (bg.id === 'sysDialogModal') return; 
+            bg.classList.remove('show'); 
+        } 
+    });
+});
+
+function updateDataLists() {
+    // ຈັດກຸ່ມວິຊາຕາມຊັ້ນຮຽນ ມ.1 ຮອດ ມ.7
+    const grades = ['ມ.1', 'ມ.2', 'ມ.3', 'ມ.4', 'ມ.5', 'ມ.6', 'ມ.7'];
+    const subjectSelect = document.getElementById('scheduleSubject');
+    
+    if(subjectSelect) {
+        let optionsHTML = '<option value="">-- ເລືອກວິຊາສອນ --</option>';
+        grades.forEach(g => {
+            const subList = subjects.filter(s => (s.grade || 'ມ.1') === g);
+            if(subList.length > 0) {
+                optionsHTML += `<optgroup label="ຫຼັກສູດຂັ້ນ ${g}">`;
+                subList.forEach(s => {
+                    optionsHTML += `<option value="${escapeHtml(s.name)}">${escapeHtml(s.name)}</option>`;
+                });
+                optionsHTML += `</optgroup>`;
+            }
+        });
+        subjectSelect.innerHTML = optionsHTML;
+    }
+    
+    // ສຳລັບຫ້ອງຮຽນ
+    const standardRooms = ["ມ.1", "ມ.2", "ມ.3", "ມ.4", "ມ.5", "ມ.6", "ມ.7"];
+    const savedRooms = schedules.map(s => s.room).filter(Boolean);
+    const allRooms = [...new Set([...standardRooms, ...savedRooms])];
+    const roomListEl = document.getElementById('roomList');
+    if(roomListEl) roomListEl.innerHTML = allRooms.map(r => `<option value="${escapeHtml(r)}">`).join('');
+}
+
+function renderAll() {
+    renderDashboard();
+    renderSubjects();
+    renderTeachers();
+    renderSchedules();
+    renderAllSchedules(); // ເພີ່ມໂຫຼດຕາຕະລາງສອນລວມ
+    renderExcelReport();
+    renderSummaryReport(); 
+    renderFinanceReport();
+    updateDataLists();
+}
+/* ============================== MANUAL OVERRIDE (ແກ້ໄຂຕາຕະລາງດ້ວຍມື) ============================== */
+let currentEditingSlot = null; // ເກັບຂໍ້ມູນຊົ່ວໂມງທີ່ກຳລັງແກ້ໄຂ
+
+function openSlotModal(teacherId, day, period, scheduleId) {
+    currentEditingSlot = { teacherId, day, period, scheduleId };
+    const modal = document.getElementById('slotEditModal');
+    const title = document.getElementById('slotModalTitle');
+    const tOrigin = teachers.find(t => t.id === teacherId);
+    
+    document.getElementById('slotOriginTeacher').textContent = `🕒 ວາງແຜນຕາຕະລາງໃຫ້: ${tOrigin ? tOrigin.name : ''}`;
+    
+    // ໂຫຼດລາຍຊື່ຄູໃນໂຮງຮຽນດຽວກັນ (ສຳລັບການປ່ຽນຄູສອນ)
+    const schoolTeachers = teachers.filter(t => t.school === tOrigin.school);
+    const tSelect = document.getElementById('slotTeacherSelect');
+    tSelect.innerHTML = schoolTeachers.map(t => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+    tSelect.value = teacherId;
+
+    document.getElementById('slotDay').value = day;
+    document.getElementById('slotPeriod').value = period;
+
+    // ດຶງລາຍຊື່ວິຊາມາໃສ່ Dropdown (ກ໋ອບປີ້ມາຈາກຟອມຫຼັກ)
+    updateDataLists(); 
+    const subjectSelect = document.getElementById('slotSubject');
+    subjectSelect.innerHTML = document.getElementById('scheduleSubject').innerHTML;
+
+    const btnDelete = document.getElementById('btnDeleteSlot');
+
+    if (scheduleId !== 'null' && scheduleId !== null) {
+        title.textContent = 'ແກ້ໄຂ / ຍ້າຍ ຊົ່ວໂມງສອນ';
+        const slot = schedules.find(s => s.id === scheduleId);
+        if(slot) {
+            subjectSelect.value = slot.subject || '';
+            document.getElementById('slotRoom').value = slot.room || '';
+        }
+        btnDelete.style.display = 'inline-block';
+    } else {
+        title.textContent = 'ເພີ່ມການສອນໃໝ່ (ດ້ວຍມື)';
+        subjectSelect.value = '';
+        document.getElementById('slotRoom').value = '';
+        btnDelete.style.display = 'none';
+    }
+
+    modal.classList.add('show');
+}
+
+async function saveSlotEdit() {
+    const { teacherId: oldTeacherId, scheduleId, day: oldDay, period: oldPeriod } = currentEditingSlot;
+    
+    const newTeacherId = document.getElementById('slotTeacherSelect').value;
+    const newDay = Number(document.getElementById('slotDay').value);
+    const newPeriod = Number(document.getElementById('slotPeriod').value);
+    const subject = document.getElementById('slotSubject').value.trim();
+    const room = document.getElementById('slotRoom').value.trim();
+
+    if (!subject) {
+        await sysAlert('ກະລຸນາເລືອກວິຊາສອນ');
+        return;
+    }
+
+    // ກວດສອບຂໍ້ຂັດແຍ່ງ (Conflict) ກໍລະນີມີການປ່ຽນແປງ ເວລາ, ຄູ, ຫຼື ເປັນການເພີ່ມໃໝ່
+    if (scheduleId === 'null' || scheduleId === null || newTeacherId !== oldTeacherId || newDay !== oldDay || newPeriod !== oldPeriod) {
+        const currentSchool = teachers.find(t => t.id === newTeacherId)?.school;
+
+        // 1. ກວດສອບວ່າຄູ (ທີ່ເລືອກ) ຊ້ຳຊ້ອນ ຫຼື ບໍ່?
+        const teacherConflict = schedules.find(s => s.teacherId === newTeacherId && s.day === newDay && s.period === newPeriod && s.id !== scheduleId);
+        if (teacherConflict) {
+            await sysAlert(`ຄູທ່ານນີ້ມີສອນແລ້ວໃນວັນ ແລະ ເວລາດັ່ງກ່າວ! (${teacherConflict.subject} ຫ້ອງ ${teacherConflict.room})`);
+            return;
+        }
+
+        // 2. ກວດສອບວ່າຫ້ອງຮຽນນີ້ ຊ້ຳຊ້ອນ ຫຼື ບໍ່? (ມີຄູອື່ນສອນຢູ່ແລ້ວຫຼືບໍ່)
+        if (room) {
+            const roomConflict = schedules.find(s => {
+                const sTeacher = teachers.find(t => t.id === s.teacherId);
+                return s.room === room && s.day === newDay && s.period === newPeriod && sTeacher && sTeacher.school === currentSchool && s.id !== scheduleId;
+            });
+            if (roomConflict) {
+                const tName = teachers.find(t => t.id === roomConflict.teacherId)?.name || 'ຄູອື່ນ';
+                await sysAlert(`ຫ້ອງ ${room} ມີການສອນແລ້ວໂດຍ ${tName} ໃນເວລານີ້!`);
+                return;
+            }
+        }
+    }
+
+    // ດຳເນີນການ ບັນທຶກ (ອັບເດດ ຫຼື ເພີ່ມໃໝ່)
+    if (scheduleId !== 'null' && scheduleId !== null) {
+        const slotIndex = schedules.findIndex(s => s.id === scheduleId);
+        if (slotIndex > -1) {
+            schedules[slotIndex].teacherId = newTeacherId; // ຮອງຮັບການປ່ຽນຄູ
+            schedules[slotIndex].day = newDay;
+            schedules[slotIndex].period = newPeriod;
+            schedules[slotIndex].subject = subject;
+            schedules[slotIndex].room = room;
+        }
+    } else {
+        schedules.push({
+            id: Date.now().toString() + '_m_' + Math.random().toString(36).substr(2, 5),
+            teacherId: newTeacherId,
+            subject,
+            room,
+            day: newDay,
+            period: newPeriod
+        });
+    }
+
+    saveData();
+    closeModal('slotEditModal');
+    renderAll();
+}
+
+async function deleteSlotEdit() {
+    const { scheduleId } = currentEditingSlot;
+    if (scheduleId === 'null' || !scheduleId) return;
+    
+    const isConfirm = await sysConfirm('ຕ້ອງການລຶບຊົ່ວໂມງສອນນີ້ອອກຈາກຕາຕະລາງແທ້ບໍ?');
+    if (!isConfirm) return;
+
+    schedules = schedules.filter(s => s.id !== scheduleId);
+    saveData();
+    closeModal('slotEditModal');
+    renderAll();
+}
+/* ============================== VERSION CONTROL (ລະບົບປະຫວັດຕາຕະລາງ) ============================== */
+function renderVersionDropdown() {
+    const select = document.getElementById('globalVersionSelect');
+    if(!select) return;
+    
+    // ຈັດລຽງເອົາເວີຊັ່ນໃໝ່ສຸດຂຶ້ນເທິງ (ຖ້າຕ້ອງການ)
+    select.innerHTML = scheduleVersions.map(v => 
+        `<option value="${v.id}" ${v.id === activeVersionId ? 'selected' : ''}>📌 ${escapeHtml(v.name)}</option>`
+    ).join('');
+}
+
+function changeVersion(versionId) {
+    activeVersionId = versionId;
+    localStorage.setItem('activeVersionId', activeVersionId);
+    loadActiveVersion(); // ດຶງຕາຕະລາງຂອງເວີຊັ່ນໃໝ່ມາ
+    renderAll(); // ໂຫຼດໜ້າຈໍໃໝ່ທັງໝົດອັດຕະໂນມັດ
+}
+
+function openSaveVersionModal() {
+    document.getElementById('newVersionName').value = '';
+    document.getElementById('versionModal').classList.add('show');
+}
+
+async function saveNewVersion() {
+    const name = document.getElementById('newVersionName').value.trim();
+    if(!name) {
+        await sysAlert('ກະລຸນາໃສ່ຊື່ເວີຊັ່ນໃໝ່ກ່ອນບັນທຶກ!');
+        return;
+    }
+    
+    // ສ້າງເວີຊັ່ນໃໝ່ ໂດຍກ໋ອບປີ້ຕາຕະລາງປັດຈຸບັນໄປທັງໝົດ
+    const newId = 'v_' + Date.now().toString();
+    const newVersion = {
+        id: newId,
+        name: name,
+        data: JSON.parse(JSON.stringify(schedules)), // Deep Copy ກັນການເຊື່ອມໂຍງ
+        createdAt: new Date().toISOString()
+    };
+    
+    scheduleVersions.push(newVersion);
+    activeVersionId = newId; // ປ່ຽນໃຫ້ໃຊ້ເວີຊັ່ນໃໝ່ອັດຕະໂນມັດ
+    
+    localStorage.setItem('scheduleVersions', JSON.stringify(scheduleVersions));
+    localStorage.setItem('activeVersionId', activeVersionId);
+    
+    closeModal('versionModal');
+    renderVersionDropdown(); // ອັບເດດ Dropdown
+    renderAll(); // ລີເຟຣຊໜ້າຈໍ
+    
+    await sysAlert(`✅ ສ້າງເວີຊັ່ນ: "${name}" ສຳເລັດແລ້ວ!\nຕອນນີ້ລະບົບກຳລັງສະແດງຜົນເວີຊັ່ນໃໝ່ນີ້ ທ່ານສາມາດແກ້ໄຂຕໍ່ໄດ້ເລີຍ.`);
+}
+
+// ໄປຊອກຫາຟັງຊັນ `renderAll()` ແລ້ວເພີ່ມ `renderVersionDropdown();` ເຂົ້າໄປໃນນັ້ນ:
+const originalRenderAll = renderAll;
+renderAll = function() {
+    renderVersionDropdown(); 
+    originalRenderAll();
+};
+/* ============================== USER MANAGEMENT (SETTINGS) ============================== */
+let sysUsers = JSON.parse(localStorage.getItem('sysUsers') || '[]');
+
+function renderUsers() {
+    const tbody = document.getElementById('userTable');
+    if (!tbody) return;
+
+    if (sysUsers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty">ຍັງບໍ່ມີຂໍ້ມູນຜູ້ໃຊ້ງານ (ຄລິກ + ເພີ່ມຜູ້ໃຊ້ໃໝ່)</div></td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = sysUsers.map((u, i) => `
+        <tr>
+            <td>${i + 1}</td>
+            <td><b>${escapeHtml(u.username)}</b></td>
+            <td>${escapeHtml(u.password)}</td>
+            <td>
+                <span class="badge badge-${u.role === 'admin' ? 'green' : (u.role === 'district' ? 'blue' : 'orange')}">
+                    ${u.role === 'admin' ? 'ແອັດມິນ (Admin)' : (u.role === 'district' ? 'ຂັ້ນເມືອງ' : 'ໂຮງຮຽນ')}
+                </span>
+            </td>
+            <td>${escapeHtml(u.scope || 'ທັງໝົດ')}</td>
+            <td style="text-align: center;">
+                <button class="btn btn-blue" onclick="editUser('${u.id}')">✏️</button>
+                <button class="btn btn-danger" onclick="deleteUser('${u.id}')">🗑️</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function openUserModal() {
+    document.getElementById('editUserId').value = '';
+    document.getElementById('userModalTitle').textContent = 'ເພີ່ມຜູ້ໃຊ້ໃໝ່';
+    document.getElementById('userUsername').value = '';
+    document.getElementById('userPassword').value = '';
+    document.getElementById('userRole').value = 'school';
+    toggleUserScope();
+    document.getElementById('userModal').classList.add('show');
+}
+
+function editUser(id) {
+    const u = sysUsers.find(x => x.id === id);
+    if (!u) return;
+    document.getElementById('editUserId').value = u.id;
+    document.getElementById('userModalTitle').textContent = 'ແກ້ໄຂຂໍ້ມູນຜູ້ໃຊ້';
+    document.getElementById('userUsername').value = u.username;
+    document.getElementById('userPassword').value = u.password;
+    document.getElementById('userRole').value = u.role;
+    toggleUserScope();
+    document.getElementById('userScope').value = u.scope || '';
+    document.getElementById('userModal').classList.add('show');
+}
+
+function toggleUserScope() {
+    const role = document.getElementById('userRole').value;
+    const group = document.getElementById('groupUserScope');
+    const scopeSelect = document.getElementById('userScope');
+    const label = document.getElementById('labelUserScope');
+
+    if (role === 'admin') {
+        group.style.display = 'none';
+    } else {
+        group.style.display = 'flex';
+        scopeSelect.innerHTML = '<option value="">-- ກະລຸນາເລືອກ --</option>';
+
+        if (role === 'district') {
+            label.textContent = 'ເລືອກເມືອງທີ່ຮັບຜິດຊອບ *';
+            Object.keys(schoolHierarchy).forEach(dist => {
+                scopeSelect.innerHTML += `<option value="${dist}">${dist}</option>`;
+            });
+        } else if (role === 'school') {
+            label.textContent = 'ເລືອກໂຮງຮຽນທີ່ຮັບຜິດຊອບ *';
+            Object.keys(schoolHierarchy).forEach(dist => {
+                scopeSelect.innerHTML += `<optgroup label="${dist}">`;
+                schoolHierarchy[dist].forEach(sch => {
+                    scopeSelect.innerHTML += `<option value="${sch}">${sch}</option>`;
+                });
+                scopeSelect.innerHTML += `</optgroup>`;
+            });
+        }
+    }
+}
+
+async function saveUser() {
+    const username = document.getElementById('userUsername').value.trim();
+    const password = document.getElementById('userPassword').value.trim();
+    const role = document.getElementById('userRole').value;
+    const scope = document.getElementById('userScope').value;
+
+    if (!username || !password) {
+        await sysAlert('ກະລຸນາປ້ອນ ຊື່ຜູ້ໃຊ້ ແລະ ລະຫັດຜ່ານ ໃຫ້ຄົບຖ້ວນ');
+        return;
+    }
+
+    if (role !== 'admin' && !scope) {
+        await sysAlert('ກະລຸນາເລືອກ ໂຮງຮຽນ ຫຼື ເມືອງ ທີ່ຮັບຜິດຊອບ');
+        return;
+    }
+
+    const editId = document.getElementById('editUserId').value;
+    const userData = { username, password, role, scope: role === 'admin' ? '' : scope };
+
+    if (editId) {
+        const index = sysUsers.findIndex(x => x.id === editId);
+        if (index > -1) sysUsers[index] = { ...sysUsers[index], ...userData };
+    } else {
+        if (sysUsers.some(u => u.username === username)) {
+            await sysAlert('ຊື່ຜູ້ໃຊ້ນີ້ມີໃນລະບົບແລ້ວ! ກະລຸນາປ່ຽນໃໝ່.');
+            return;
+        }
+        sysUsers.push({ id: 'u_' + Date.now().toString(), ...userData });
+    }
+
+    localStorage.setItem('sysUsers', JSON.stringify(sysUsers));
+    closeModal('userModal');
+    renderUsers();
+}
+
+async function deleteUser(id) {
+    const isConfirm = await sysConfirm('ຕ້ອງການລຶບຜູ້ໃຊ້ນີ້ແທ້ບໍ?');
+    if (!isConfirm) return;
+    sysUsers = sysUsers.filter(u => u.id !== id);
+    localStorage.setItem('sysUsers', JSON.stringify(sysUsers));
+    renderUsers();
+}
+
+// ເພີ່ມການ Render ໜ້າ Users ເຂົ້າໄປໃນຟັງຊັນ RenderAll ຫຼັກ
+const existingRenderAllForUsers = renderAll;
+renderAll = function() {
+    existingRenderAllForUsers();
+    if(typeof renderUsers === 'function') renderUsers();
+};
+/* ============================== ROLE-BASED ACCESS CONTROL (ກຳນົດສິດການເຂົ້າເຖິງ) ============================== */
+// ຕົວປ່ຽນຈຳລອງສະຖານະການ Login ປັດຈຸບັນ (ໃນອະນາຄົດຈະດຶງຄ່າມາຈາກລະບົບ Login ແທ້)
+// ວິທີທົດສອບ: ລອງປ່ຽນ role ເປັນ 'admin', 'district' ຫຼື 'school'
+let currentUser = {
+    role: 'admin',     // ປ່ຽນເປັນ 'district' ຫຼື 'school' ເພື່ອທົດສອບ
+    scope: '',         // ຖ້າ role='district' ໃຫ້ໃສ່ຊື່ເມືອງ (ເຊັ່ນ: 'ເມືອງ ໄຊຍະບູລີ'), ຖ້າ role='school' ໃຫ້ໃສ່ຊື່ໂຮງຮຽນ
+    name: 'Super Admin' 
+};
+
+// ຟັງຊັນສຳລັບລັອກກ່ອງເລືອກໃນ Dashboard ຕາມສິດຂອງ User
+function applyUserAccessControl() {
+    const provinceSelect = document.getElementById("filterProvince");
+    const districtSelect = document.getElementById("filterDistrict");
+    const schoolSelect = document.getElementById("filterSchool");
+
+    if (!provinceSelect || !districtSelect || !schoolSelect) return;
+
+    // ອັບເດດຊື່ຜູ້ໃຊ້ໃນແຈເທິງຂວາ
+    const userNameDisplay = document.querySelector('.user-name');
+    const userRoleDisplay = document.querySelector('.user-role');
+    const userAvatarDisplay = document.querySelector('.avatar');
+    
+    if (userNameDisplay) userNameDisplay.textContent = currentUser.name;
+    if (userRoleDisplay) userRoleDisplay.textContent = currentUser.role === 'admin' ? 'Administrator' : (currentUser.role === 'district' ? 'District Admin' : 'School Admin');
+    if (userAvatarDisplay) userAvatarDisplay.textContent = currentUser.name.substring(0, 2).toUpperCase();
+
+    if (currentUser.role === 'admin') {
+        // Super Admin: ເປີດໃຫ້ເລືອກໄດ້ອິດສະຫຼະ
+        provinceSelect.disabled = false;
+        districtSelect.disabled = false;
+        schoolSelect.disabled = false;
+    } 
+    else if (currentUser.role === 'district') {
+        // ຂັ້ນເມືອງ: ລັອກແຂວງ ແລະ ເມືອງ, ແຕ່ເລືອກໂຮງຮຽນໃນເມືອງຕົນເອງໄດ້
+        provinceSelect.value = "ໄຊຍະບູລີ"; // ສົມມຸດຖານຂໍ້ມູນຫຼັກຢູ່ແຂວງນີ້
+        provinceSelect.disabled = true;
+        
+        updateDistricts(); // ໂຫຼດລາຍຊື່ເມືອງ
+        
+        districtSelect.value = currentUser.scope;
+        districtSelect.disabled = true;
+        
+        updateDashboardSchools(); // ໂຫຼດລາຍຊື່ໂຮງຮຽນສະເພາະເມືອງນັ້ນ
+        schoolSelect.disabled = false;
+    } 
+    else if (currentUser.role === 'school') {
+        // ຂັ້ນໂຮງຮຽນ: ລັອກທຸກຢ່າງ, ບັງຄັບໃຫ້ເຫັນສະເພາະໂຮງຮຽນຕົນເອງ
+        provinceSelect.value = "ໄຊຍະບູລີ";
+        provinceSelect.disabled = true;
+
+        // ຄົ້ນຫາເມືອງທີ່ໂຮງຮຽນນີ້ສັງກັດຢູ່
+        let foundDistrict = "";
+        for (const [dist, schools] of Object.entries(schoolHierarchy)) {
+            if (schools.includes(currentUser.scope)) {
+                foundDistrict = dist;
+                break;
+            }
+        }
+
+        updateDistricts();
+        districtSelect.value = foundDistrict;
+        districtSelect.disabled = true;
+
+        updateDashboardSchools();
+        schoolSelect.value = currentUser.scope;
+        schoolSelect.disabled = true;
+    }
+    
+    // ຫຼັງຈາກຕັ້ງຄ່າກ່ອງເລືອກສຳເລັດ ໃຫ້ໂຫຼດຂໍ້ມູນໃນໜ້າຈໍໃໝ່
+    renderAll();
+}
+</script>
+</body>
+</html>
