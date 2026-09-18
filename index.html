@@ -1241,14 +1241,17 @@ tr:hover td{
         </div>
     </div> <!-- ຍ້າຍ </div> ມາປິດຢູ່ບ່ອນນີ້ແທນ ເພື່ອຫຸ້ມເອົາລາຍເຊັນໄວ້ນຳ -->
 </section>
-<!-- SETTINGS (User Management) -->
+<!-- SETTINGS (User Management & Backup) -->
 <section class="view" id="view-settings">
     <div class="toolbar">
         <div>
-            <h2 style="font-size:18px;">⚙️ ຕັ້ງຄ່າຜູ້ໃຊ້ງານລະບົບ</h2>
-            <div style="font-size:12px;color:#64748b;">ກຳນົດສິດ, ຊື່ຜູ້ໃຊ້ ແລະ ລະຫັດຜ່ານສຳລັບແຕ່ລະໂຮງຮຽນ ຫຼື ເມືອງ</div>
+            <h2 style="font-size:18px;">⚙️ ຕັ້ງຄ່າລະບົບ ແລະ ຜູ້ໃຊ້ງານ</h2>
+            <div style="font-size:12px;color:#64748b;">ກຳນົດສິດ, ສຳຮອງ/ນຳເຂົ້າຂໍ້ມູນ (Backup/Restore)</div>
         </div>
-        <div class="toolbar-right">
+        <div class="toolbar-right" style="display:flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-success" onclick="exportDatabase()">💾 ສຳຮອງຂໍ້ມູນ (Export)</button>
+            <button class="btn btn-orange" onclick="document.getElementById('importFile').click()" style="background:#f59e0b; color:white; border:none;">📂 ນຳເຂົ້າຂໍ້ມູນ (Import)</button>
+            <input type="file" id="importFile" style="display:none;" accept=".json" onchange="importDatabase(event)">
             <button class="btn btn-primary" onclick="openUserModal()">＋ ເພີ່ມຜູ້ໃຊ້ໃໝ່</button>
         </div>
     </div>
@@ -4189,6 +4192,57 @@ function applyUserAccessControl() {
     
     // ຫຼັງຈາກຕັ້ງຄ່າກ່ອງເລືອກສຳເລັດ ໃຫ້ໂຫຼດຂໍ້ມູນໃນໜ້າຈໍໃໝ່
     renderAll();
+}
+/* ============================== BACKUP & RESTORE DATABASE ============================== */
+function exportDatabase() {
+    const data = {
+        teachers: JSON.parse(localStorage.getItem('teachers') || '[]'),
+        subjects: JSON.parse(localStorage.getItem('subjects') || '[]'),
+        assignments: JSON.parse(localStorage.getItem('assignments') || '{}'),
+        scheduleVersions: JSON.parse(localStorage.getItem('scheduleVersions') || '[]'),
+        activeVersionId: localStorage.getItem('activeVersionId'),
+        sysUsers: JSON.parse(localStorage.getItem('sysUsers') || '[]'),
+        schoolHierarchy: JSON.parse(localStorage.getItem('schoolHierarchy') || '{}')
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "ot_database_backup_" + new Date().toISOString().slice(0,10) + ".json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+}
+
+async function importDatabase(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const isConfirm = await sysConfirm('⚠️ ທ່ານຕ້ອງການນຳເຂົ້າຂໍ້ມູນແທ້ບໍ?\n\nຂໍ້ມູນປັດຈຸບັນທັງໝົດໃນເວັບນີ້ ຈະຖືກລຶບ ແລະ ແທນທີ່ດ້ວຍຂໍ້ມູນຈາກໄຟລ໌ໃໝ່!');
+    if (!isConfirm) {
+        event.target.value = ''; 
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.teachers) localStorage.setItem('teachers', JSON.stringify(data.teachers));
+            if (data.subjects) localStorage.setItem('subjects', JSON.stringify(data.subjects));
+            if (data.assignments) localStorage.setItem('assignments', JSON.stringify(data.assignments));
+            if (data.scheduleVersions) localStorage.setItem('scheduleVersions', JSON.stringify(data.scheduleVersions));
+            if (data.activeVersionId) localStorage.setItem('activeVersionId', data.activeVersionId);
+            if (data.sysUsers) localStorage.setItem('sysUsers', JSON.stringify(data.sysUsers));
+            if (data.schoolHierarchy) localStorage.setItem('schoolHierarchy', JSON.stringify(data.schoolHierarchy));
+
+            await sysAlert('✅ ນຳເຂົ້າຂໍ້ມູນສຳເລັດແລ້ວ! ລະບົບຈະຣີເຟຣຊໜ້າຈໍໃໝ່.');
+            location.reload(); 
+        } catch (err) {
+            await sysAlert('❌ ໄຟລ໌ຂໍ້ມູນບໍ່ຖືກຕ້ອງ ຫຼື ເກີດຂໍ້ຜິດພາດໃນການນຳເຂົ້າ!');
+        }
+        event.target.value = ''; 
+    };
+    reader.readAsText(file);
 }
 </script>
 </body>
