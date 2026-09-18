@@ -4248,51 +4248,68 @@ async function importDatabase(event) {
     };
     reader.readAsText(file);
 }
-/* ============================== FIREBASE REALTIME SYNC (ໂຄດໃໝ່ທີ່ເພີ່ມເຂົ້າ) ============================== */
-// 1. ຕັ້ງຄ່າ Firebase (ເອົາຂໍ້ມູນຈາກ Project Settings ຂອງເຈົ້າມາປ່ຽນໃສ່ບ່ອນນີ້)
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+/* ============================== FIREBASE REALTIME SYNC (ສະບັບແກ້ໄຂບັກ & ກວດສອບສະຖານະ) ============================== */
 const firebaseConfig = {
   apiKey: "AIzaSyDD2uLOkgTkb_o2nCiwA3htyvpF3nxHqOA",
   authDomain: "teacherapp-92705.firebaseapp.com",
   projectId: "teacherapp-92705",
-  databaseURL: "https://teacherapp-92705-default-rtdb.asia-southeast1.firebasedatabase.app", // <--- ເພີ່ມແຖວນີ້ເຂົ້າໄປ (ຖ້າຢູ່ເຊີບເວີອາຊີ) ຫຼື ລອງໃຊ້ .firebaseio.com ຖ້າບໍ່ໄດ້
+  databaseURL: "https://teacherapp-92705-default-rtdb.firebaseio.com",
   storageBucket: "teacherapp-92705.firebasestorage.app",
   messagingSenderId: "332710309758",
   appId: "1:332710309758:web:a6cf2936d79e3cb5ce4d2f",
   measurementId: "G-16ZKGZ0922"
 };
 
-// ເປີດໃຊ້ງານ Firebase ຖ້າຍັງບໍ່ໄດ້ເປີດ
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
 const db = firebase.database();
-window.isFirebaseReceiving = false; // ຕົວລັອກປ້ອງກັນ Loop ອິນຟິນິຕີ້
+window.isFirebaseReceiving = false;
 window.firebaseSyncTimer = null;
 
-// 2. ຟັງຊັນຍູ້ຂໍ້ມູນຂຶ້ນ Firebase (ຈະຖືກເອີ້ນໃຊ້ອັດຕະໂນມັດ)
+// ເພີ່ມຈຸດສັງເກດການເຊື່ອມຕໍ່ (ສະແດງຢູ່ໃກ້ໆຊື່ Super Admin)
+const connectionStatus = document.createElement('div');
+connectionStatus.style.cssText = "font-size: 11px; margin-right: 15px; font-weight: bold; padding: 4px 8px; border-radius: 10px;";
+document.querySelector('.user-box').prepend(connectionStatus);
+
+// ກວດສອບວ່າອິນເຕີເນັດເຊື່ອມກັບ Firebase ໄດ້ຫຼືບໍ່
+db.ref('.info/connected').on('value', function(snap) {
+    if (snap.val() === true) {
+        connectionStatus.innerHTML = "🟢 ອອນລາຍ (Realtime)";
+        connectionStatus.style.background = "#dcfce7";
+        connectionStatus.style.color = "#166534";
+    } else {
+        connectionStatus.innerHTML = "🔴 ອອຟລາຍ (ລໍຖ້າເຊື່ອມຕໍ່)";
+        connectionStatus.style.background = "#fee2e2";
+        connectionStatus.style.color = "#b91c1c";
+    }
+});
+
+// ຟັງຊັນຍູ້ຂໍ້ມູນຂຶ້ນ (ໃຊ້ JSON.parse ເພື່ອກັ່ນຕອງຄ່າ Undefined ຖິ້ມ ປ້ອງກັນ Firebase Error)
 function syncToFirebase() {
     if (!window.isFirebaseReceiving) {
-        db.ref('school_data').set({
-            teachers: teachers,
-            subjects: subjects,
-            assignments: assignments,
-            scheduleVersions: scheduleVersions,
-            activeVersionId: activeVersionId,
-            sysUsers: sysUsers,
-            schoolHierarchy: schoolHierarchy
-        }).catch(err => console.error("Firebase Sync Error:", err));
+        const payload = JSON.parse(JSON.stringify({
+            teachers: teachers || [],
+            subjects: subjects || [],
+            assignments: assignments || {},
+            scheduleVersions: scheduleVersions || [],
+            activeVersionId: activeVersionId || 'default',
+            sysUsers: sysUsers || [],
+            schoolHierarchy: schoolHierarchy || {}
+        }));
+
+        db.ref('school_data').set(payload).catch(err => {
+            console.error("Firebase Error:", err);
+            alert("ເກີດຂໍ້ຜິດພາດໃນການອັບເດດອອນລາຍ: " + err.message + "\n(ກະລຸນາກວດເບິ່ງການຕັ້ງຄ່າ Rules ໃນ Firebase)");
+        });
     }
 }
 
-// 3. ລະບົບດັກຈັບ (Interceptor): ທຸກຄັ້ງທີ່ໂຄດເກົ່າເຈົ້າສັ່ງ Save ລົງ LocalStorage, ມັນຈະດັກຈັບແລ້ວຍູ້ຂຶ້ນອອນລາຍໃຫ້
+// ດັກຈັບການບັນທຶກຈາກ LocalStorage
 const originalSetItem = localStorage.setItem;
 localStorage.setItem = function(key, value) {
-    // ໃຫ້ບັນທຶກລົງເຄື່ອງຄືເກົ່າ (ເພື່ອເປັນ Backup ແລະ ໃຊ້ຕອນ Offline)
     originalSetItem.apply(this, arguments);
-
-    // ຖ້າເປັນຂໍ້ມູນລະບົບ, ໃຫ້ໜ່ວງເວລາ 0.5 ວິນາທີ ແລ້ວຍູ້ຂຶ້ນ Firebase ລວມກັນບາດດຽວ (ຫຼຸດການໂຫຼດໜັກ)
     const watchKeys = ['teachers', 'subjects', 'assignments', 'scheduleVersions', 'activeVersionId', 'sysUsers', 'schoolHierarchy', 'schedules'];
     if (watchKeys.includes(key)) {
         clearTimeout(window.firebaseSyncTimer);
@@ -4300,22 +4317,21 @@ localStorage.setItem = function(key, value) {
     }
 };
 
-// 4. ຮັບຂໍ້ມູນອັບເດດຈາກ Firebase ແບບ Realtime (ຖ້າມີຄົນອື່ນແກ້ໄຂ ຫຼື ໂຫຼດເປີດໜ້າເວັບໃໝ່)
+// ຮັບຂໍ້ມູນລົງມາຈາກ Firebase
 db.ref('school_data').on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
-        window.isFirebaseReceiving = true; // ລັອກການຍູ້ຂໍ້ມູນຂຶ້ນຊົ່ວຄາວ ເພື່ອຮັບຂໍ້ມູນລົງມາ
+        window.isFirebaseReceiving = true;
 
-        // ອັບເດດຕົວປ່ຽນໃນໜ້າຈໍທັງໝົດ
-        if (data.teachers) teachers = data.teachers;
-        if (data.subjects) subjects = data.subjects;
-        if (data.assignments) assignments = data.assignments;
-        if (data.scheduleVersions) scheduleVersions = data.scheduleVersions;
-        if (data.activeVersionId) activeVersionId = data.activeVersionId;
-        if (data.sysUsers) sysUsers = data.sysUsers;
-        if (data.schoolHierarchy) schoolHierarchy = data.schoolHierarchy;
+        // ດຶງຄ່າມາໃສ່ຕົວປ່ຽນ (ໃຊ້ || [] ເພື່ອປ້ອງກັນກໍລະນີ Firebase ບໍ່ສົ່ງ Array ວ່າງເປົ່າມາ)
+        teachers = data.teachers || [];
+        subjects = data.subjects || [];
+        assignments = data.assignments || {};
+        scheduleVersions = data.scheduleVersions || [];
+        activeVersionId = data.activeVersionId || 'default';
+        sysUsers = data.sysUsers || [];
+        schoolHierarchy = data.schoolHierarchy || {};
 
-        // ອັບເດດ Backup ໃນເຄື່ອງງຽບໆ (ໃຊ້ originalSetItem ເພື່ອບໍ່ໃຫ້ລະບົບດັກຈັບເຮັດວຽກຊ້ຳຊ້ອນ)
         originalSetItem.call(localStorage, 'teachers', JSON.stringify(teachers));
         originalSetItem.call(localStorage, 'subjects', JSON.stringify(subjects));
         originalSetItem.call(localStorage, 'assignments', JSON.stringify(assignments));
@@ -4324,15 +4340,12 @@ db.ref('school_data').on('value', (snapshot) => {
         originalSetItem.call(localStorage, 'sysUsers', JSON.stringify(sysUsers));
         originalSetItem.call(localStorage, 'schoolHierarchy', JSON.stringify(schoolHierarchy));
 
-        // ໂຫຼດເວີຊັ່ນຕາຕະລາງປັດຈຸບັນ ແລະ ລີເຟຣຊໜ້າຈໍອັດຕະໂນມັດ
         loadActiveVersion();
         if (typeof renderAll === 'function') renderAll();
 
-        // ປົດລັອກຫຼັງຈາກໂຫຼດສຳເລັດ 0.5 ວິນາທີ
         setTimeout(() => { window.isFirebaseReceiving = false; }, 500);
     } else {
-        // ຖ້າຖານຂໍ້ມູນ Firebase ວ່າງເປົ່າ (ຫາກໍ່ສ້າງໃໝ່ໆ), ໃຫ້ຍູ້ຂໍ້ມູນຈາກ LocalStorage ໃນເຄື່ອງຂຶ້ນໄປເປັນຄ່າເລີ່ມຕົ້ນ
-        syncToFirebase();
+        syncToFirebase(); // ຖ້າຖານຂໍ້ມູນຫວ່າງເປົ່າ ໃຫ້ດັນຂໍ້ມູນໃນເຄື່ອງຂຶ້ນໄປ
     }
 });
 /* ============================== ສິ້ນສຸດໂຄດໃໝ່ ============================== */
