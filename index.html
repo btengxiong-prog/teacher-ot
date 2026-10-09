@@ -33,7 +33,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:#fff}th,td{b
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBjLViQJx7ea5-wpgnxqvbgiPQYXRZH3zc",
@@ -57,6 +57,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:#fff}th,td{b
   window.limit = limit;
   window.doc = doc;
   window.setDoc = setDoc;
+  window.deleteDoc = deleteDoc;
 </script>
 
 </head>
@@ -128,6 +129,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:#fff}th,td{b
    </div>
    <button class="secondary" style="margin-bottom: 2px;" onclick="fetchHistoryList()">🔄 ໂຫຼດລາຍຊື່</button>
    <button class="primary" style="margin-bottom: 2px;" onclick="loadSelectedHistory()">👁️ ເບິ່ງຂໍ້ມູນ</button>
+   <button class="danger" style="margin-bottom: 2px;" onclick="deleteAllHistory()">🗑️ ລຶບປະຫວັດທັງໝົດ</button>
  </div>
   <div class="table-wrap">
    <table id="resultTable"><thead><tr>
@@ -591,6 +593,46 @@ function loadSelectedHistory() {
   document.getElementById('status').textContent = `👁️ ກຳລັງເບິ່ງປະຫວັດຂອງ [${data.auditTitle || 'ປີ '+data.year}] ງວດ ${data.batch}`;
   
   render();
+}
+async function deleteAllHistory() {
+  if(!window.db) return alert("ກຳລັງເຊື່ອມຕໍ່ຖານຂໍ້ມູນ ກະລຸນາລໍຖ້າບຶດໜຶ່ງ...");
+  
+  // ແຈ້ງເຕືອນຢືນຢັນກ່ອນລຶບ
+  if(!confirm("⚠️ ຄຳເຕືອນ: ທ່ານຕ້ອງການລຶບຂໍ້ມູນປະຫວັດການກວດສອບ 'ທັງໝົດ' ອອກຈາກລະບົບອອນໄລນ໌ແທ້ຫຼືບໍ່?\n\n(ໝາຍເຫດ: ຂໍ້ມູນທີ່ລຶບແລ້ວຈະບໍ່ສາມາດກູ້ຄືນໄດ້)")) {
+    return;
+  }
+
+  try {
+    const btn = document.querySelector('button[onclick="deleteAllHistory()"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ ກຳລັງລຶບ...';
+    btn.disabled = true;
+
+    // ດຶງຂໍ້ມູນທັງໝົດໃນ Collection ມາ
+    const q = window.query(window.collection(window.db, "audit_records"));
+    const snap = await window.getDocs(q);
+    
+    // ວົນລູບລຶບທຸກໆ Record
+    const deletePromises = [];
+    snap.forEach(documentSnapshot => {
+      deletePromises.push(window.deleteDoc(window.doc(window.db, "audit_records", documentSnapshot.id)));
+    });
+
+    await Promise.all(deletePromises);
+    
+    alert("✅ ລຶບຂໍ້ມູນປະຫວັດອອນໄລນ໌ທັງໝົດສຳເລັດແລ້ວ!");
+    
+    // ຄືນຄ່າປຸ່ມ ແລະ ລ້າງລາຍຊື່ໃນ Dropdown
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+    allHistories = [];
+    document.getElementById('historySelect').innerHTML = '<option value="">-- ກົດປຸ່ມໂຫຼດລາຍຊື່ກ່ອນ --</option>';
+    
+  } catch (e) {
+    console.error("ເກີດຂໍ້ຜິດພາດ: ", e);
+    alert("ເກີດຂໍ້ຜິດພາດໃນການລຶບຂໍ້ມູນ: " + e.message);
+    document.querySelector('button[onclick="deleteAllHistory()"]').disabled = false;
+  }
 }
 </script>
 </body>
